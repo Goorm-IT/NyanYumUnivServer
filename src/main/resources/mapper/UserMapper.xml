@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nyanyumserver.nyanyumserver.mapper.UserMapper">
+    <resultMap type="com.nyanyumserver.nyanyumserver.VO.UserInfo" id="UserInfo">
+        <result column="uid" property="uid"/>
+        <result column="nickName" property="nickName" />
+    </resultMap>
+    <select id="getUid" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo" resultType="String">
+        SELECT uid
+        FROM user
+        WHERE uid = #{uid}
+    </select>
+    <select id="getLogin" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo" resultMap="UserInfo">
+        SELECT *
+        FROM user
+        where uid = #{uid}
+    </select>
+
+    <select id="getRegister" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo" resultMap="UserInfo">
+        INSERT INTO user (uid, nickName)
+        VALUES (#{uid}, #{nickName})
+    </select>
+
+    <select id="getSecession" parameterType="java.lang.String">
+        DELETE FROM user
+        WHERE uid = #{uid}
+    </select>
+
+    <update id="getUpdateNickName" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo">
+        UPDATE user
+        SET nickName = #{nickName}
+        WHERE uid = #{uid}
+    </update>
+
+</mapper>
