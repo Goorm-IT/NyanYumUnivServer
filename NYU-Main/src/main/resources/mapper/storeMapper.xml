@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nyanyumserver.nyanyumserver.mapper.storeMapper">
+    <resultMap type="com.nyanyumserver.nyanyumserver.VO.StoreInfo" id="StoreInfo">
+        <result column="storeId" property="storeId"/>
+        <result column="address" property="address" />
+        <result column="score" property="score"/>
+        <result column="commentId" property="commentId" />
+    </resultMap>
+    <select id="getStoreList" resultMap="StoreInfo">
+        SELECT *
+        FROM store
+    </select>
+</mapper>
