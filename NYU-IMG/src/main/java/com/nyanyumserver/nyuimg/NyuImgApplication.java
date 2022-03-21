@@ -1,0 +1,13 @@
+package com.nyanyumserver.nyuimg;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class NyuImgApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(NyuImgApplication.class, args);
+    }
+
+}
