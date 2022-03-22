@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import javax.swing.filechooser.FileSystemView;
 import java.io.*;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,7 +88,7 @@ public class UserController {
 
     }
     @ApiOperation(value = "회원가입")
-    @PutMapping("/Register")
+    @PutMapping("/register")
     public Object Register(
             @ApiParam(value = "uid (UserId)", required= true) @RequestParam(value = "uid", required =true) String uid,
             @ApiParam(value = "nickName (nickName)", required= true) @RequestParam("nickName") String nickName,
@@ -96,6 +97,7 @@ public class UserController {
 
         userSearchInfo.setUid(uid);
         userSearchInfo.setNickName(nickName);
+        userSearchInfo.setRegisterDate(LocalDate.now());
 
         if (userService.getUid(userSearchInfo) != null) {
             return new ResponseEntity<>("이미 가입된 아이디 입니다.", HttpStatus.BAD_REQUEST);
