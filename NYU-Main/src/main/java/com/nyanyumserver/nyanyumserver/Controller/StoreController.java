@@ -1,25 +1,21 @@
 package com.nyanyumserver.nyanyumserver.Controller;
 
 import com.nyanyumserver.nyanyumserver.Service.StoreService;
-import com.nyanyumserver.nyanyumserver.VO.StoreInfo;
 import com.nyanyumserver.nyanyumserver.VO.StoreSearchInfo;
-import com.nyanyumserver.nyanyumserver.VO.UserInfo;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @EnableAsync
@@ -35,20 +31,25 @@ public class StoreController {
 
     @GetMapping("/storeList")
     @ApiOperation(value = "가게 리스트")
-    public Object getStoreList(){
+    public Object getStoreList(
+            @ApiParam(value = "pageNo", required = true) @RequestParam(value = "pageNo", required = true) int pageNo,
+            @ApiParam(value = "pageSize", required = true) @RequestParam(value = "pageSize", required = true) int pageSize){
 
+        if (logger.isDebugEnabled()){
+            logger.debug("START. getStoreList");
+        }
         try{
-            logger.debug("START.");
             StoreSearchInfo storeSearchInfo = new StoreSearchInfo();
 
             storeService.getStoreList(storeSearchInfo);
 
+            if (logger.isDebugEnabled()){
+                logger.debug("END. getStoreList");
+            }
 
-            logger.debug("END");
             return storeSearchInfo.getStoreInfos();
         }catch (Exception e){
-            logger.debug("ERROR, StoreList");
-
+            logger.error("ERROR, getStoreList");
             return new ResponseEntity<>("불러올 수 없습니다.", HttpStatus.BAD_REQUEST);
         }
     }
@@ -56,26 +57,42 @@ public class StoreController {
     @PutMapping("/addStore")
     @ApiOperation(value= "가게 추가")
     public Object addStore(){
-        try{
-            logger.debug("START.");
 
+        if (logger.isDebugEnabled()) {
+            logger.debug("START. addStore");
+        }
+        try{
+
+            logger.debug("END. addStore");
             return null;
         }catch (Exception e){
-            return null;
+            if (logger.isDebugEnabled()) {
+                logger.error("ERROR. addStore");
+            }
+            return new ResponseEntity<>("이미 존재하는 가게 입니다.", HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/storeInfo")
     @ApiOperation(value = "가게 정보")
-    public Object getStoreInfo(){
+    public Object getStoreInfo(
+            @ApiParam(value = "가게 ID", required = true) @RequestParam(value = "storeId", required = true) String storeId
+    ){
         try{
-            logger.debug("START.");
+            if (logger.isDebugEnabled()) {
+                logger.debug("START. storeInfo");
+            }
 
-            logger.debug("END.");
+            StoreSearchInfo storeSearchInfo = new StoreSearchInfo();
+            storeSearchInfo.setStoreId(storeId);
 
-            return null;
+            storeService.getStoreInfo(storeSearchInfo);
+
+            logger.debug("END. storeInfo");
+
+            return new ResponseEntity<>(storeSearchInfo.getStoreInfos(), HttpStatus.OK);
         }catch (Exception e){
-            return null;
+            return new ResponseEntity<>("가게 정보가 없습니다.", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -83,9 +100,11 @@ public class StoreController {
     @ApiOperation(value = "이달의 가게")
     public Object getMonthlyStore(){
         try{
-            logger.debug("START.");
+            if (logger.isDebugEnabled()) {
+                logger.debug("START. monthlyStore");
+            }
 
-            logger.debug("END.");
+            logger.debug("END. monthlyStore");
 
             return "qwe";
         }catch (Exception e){
