@@ -1,5 +1,6 @@
 package com.nyanyumserver.nyanyumserver.Controller;
 
+import com.nyanyumserver.nyanyumserver.Common.CommonConst;
 import com.nyanyumserver.nyanyumserver.Service.UserService;
 import com.nyanyumserver.nyanyumserver.VO.UserInfo;
 import com.nyanyumserver.nyanyumserver.VO.UserSearchInfo;
@@ -208,8 +209,6 @@ public class UserController {
             logger.debug("START. updateProfileImage");
         }
 
-        final String mainPath = "/home/ubuntu/Profile/";
-
         // mac
         // final String mainPath = "//Users/hantaemin/ProfileImage/"
 
@@ -223,9 +222,9 @@ public class UserController {
 
             System.out.println(FileSystemView.getFileSystemView().getHomeDirectory().toString());
             //"/Users/hantaemin/ProfileImage/" +
-            file.transferTo(new File( mainPath + session.getAttribute("uid") + ".jpg"));
+            file.transferTo(new File( CommonConst.MAIN_PATH + session.getAttribute("uid") + ".jpg"));
 
-            userSearchInfo.setPath((String) session.getAttribute(mainPath + session.getAttribute("uid") + ".jpg"));
+            userSearchInfo.setPath((String) session.getAttribute(CommonConst.MAIN_PATH + session.getAttribute("uid") + ".jpg"));
 
             return new ResponseEntity<>("변경 완료", HttpStatus.OK);
 

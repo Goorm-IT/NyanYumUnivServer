@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 @EnableAsync
 @RestController
@@ -29,11 +34,15 @@ public class StoreController {
     @Autowired
     StoreService storeService;
 
-    @GetMapping("/storeList")
+    @GetMapping(value = "/storeList")
     @ApiOperation(value = "가게 리스트")
     public Object getStoreList(
             @ApiParam(value = "pageNo", required = true) @RequestParam(value = "pageNo", required = true) int pageNo,
-            @ApiParam(value = "pageSize", required = true) @RequestParam(value = "pageSize", required = true) int pageSize){
+            @ApiParam(value = "pageSize", required = true) @RequestParam(value = "pageSize", required = true) int pageSize,
+            @ApiParam(value = "storeId", required = false) @RequestParam(value = "storeId", required = false) String storeId,
+            @ApiParam(value = "category", required = false) @RequestParam(value = "category", required = false) String category,
+            @ApiParam(value = "option" , required = false) @RequestParam(value = "option", required = false) String option){
+        // option = 최근 리뷰 등록 된 순, 가게 등록 최신, 가게 등록 오래 된 순, 리뷰 갯수 높은거, 평점
 
         if (logger.isDebugEnabled()){
             logger.debug("START. getStoreList");
@@ -41,13 +50,26 @@ public class StoreController {
         try{
             StoreSearchInfo storeSearchInfo = new StoreSearchInfo();
 
+            storeSearchInfo.setStoreId(storeId);
+            storeSearchInfo.setCategory(category);
+            storeSearchInfo.setOption(option);
+
             storeService.getStoreList(storeSearchInfo);
+
 
             if (logger.isDebugEnabled()){
                 logger.debug("END. getStoreList");
             }
 
-            return storeSearchInfo.getStoreInfos();
+            List<Map<String,Object>> storeList = new ArrayList<Map<String,Object>>();
+            Map<String, Object> map = new HashMap<String, Object>();
+
+            map.put("storeList", storeSearchInfo.getStoreInfos());
+
+
+
+            return new ResponseEntity<>(map, HttpStatus.OK);
+
         }catch (Exception e){
             logger.error("ERROR, getStoreList");
             return new ResponseEntity<>("불러올 수 없습니다.", HttpStatus.BAD_REQUEST);
@@ -104,9 +126,20 @@ public class StoreController {
                 logger.debug("START. monthlyStore");
             }
 
+            StoreSearchInfo storeSearchInfo = new StoreSearchInfo();
+
+            storeService.getMonthlyStore(storeSearchInfo);
+
             logger.debug("END. monthlyStore");
 
-            return "qwe";
+            List<Map<String,Object>> monthlyStoreList = new ArrayList<Map<String,Object>>();
+            Map<String, Object> map = new HashMap<String, Object>();
+
+            map.put("storeList", storeSearchInfo.getStoreInfos());
+
+
+
+            return new ResponseEntity<>(map, HttpStatus.OK);
         }catch (Exception e){
             return "qwe";
         }

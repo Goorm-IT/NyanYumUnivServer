@@ -1,0 +1,29 @@
+server:
+  port: 80
+
+spring:
+  session:
+    store-type: redis
+    redis:
+      flush-mode: on_save
+      namespace: spring:session
+  redis:
+    host: 127.0.0.1
+    password:
+    port: 6379
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+  datasource:
+    url: jdbc:mariadb://ec2-52-79-251-162.ap-northeast-2.compute.amazonaws.com:3306/nyu
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: root
+    password: qwer
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  type-aliases-package: com.nyanyumserver.nyanyumserver
+  mapper-locations: mapper/**/*.xml
