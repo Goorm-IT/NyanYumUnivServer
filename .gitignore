@@ -38,6 +38,7 @@ out/
 
 ### Config ###
 NYU-IMG/src/main/resources/application.yml
+NYU-IMG/target/classes/application.yml
 
 ### Django ###
 NYU_Manage/*.log
