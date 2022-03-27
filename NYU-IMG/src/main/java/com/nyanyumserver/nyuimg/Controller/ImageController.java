@@ -1,9 +1,9 @@
 package com.nyanyumserver.nyuimg.Controller;
 
+import com.nyanyumserver.nyuimg.Global.status.StatusCode;
+import com.nyanyumserver.nyuimg.Global.status.StatusResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,37 +14,50 @@ import com.nyanyumserver.nyuimg.Service.ImageService;
 public class ImageController {
     private final ImageService imageService;
 
-    @GetMapping("/auth/downloadProfileImage")
-    public ResponseEntity<ByteArrayResource> downloadImage(
-            @RequestParam("uid") String uid) {
-            byte[] data = imageService.downloadImage(uid);
-        ByteArrayResource resource = new ByteArrayResource(data);
-        HttpHeaders headers = buildHeaders(uid, data);
-
-        return ResponseEntity
-                .ok()
-                .headers(headers)
-                .body(resource);
-    }
-
-    private HttpHeaders buildHeaders(String resourcePath, byte[] data) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentLength(data.length);
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-//        headers.setContentDisposition(CommonUtils.createContentDisposition(uid));
-        return headers;
-    }
-
+    /**
+     * 이미지 변경하기
+     *
+     * body {
+     *     "uid" : "uid",
+     *     "file" : "file"
+     * }
+     * @param uid
+     * @param multipartFile
+     */
     @PostMapping("/auth/updateProfileImage")
-    public String uploadImage(
+    public ResponseEntity<StatusResponse> uploadImage(
             @RequestParam("uid") String uid,
             @RequestPart(value = "file") MultipartFile multipartFile) {
-        return imageService.uploadImage(uid, multipartFile);
+            imageService.uploadImage(uid, multipartFile);
+            final StatusResponse response = new StatusResponse(StatusCode.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/auth/deleteProfileImage")
-    public void deleteImage(
+    /**
+     * 이미지 가져오기
+     *
+     * @param uid
+     * @return ImageURI
+     */
+    @GetMapping("/auth/downloadProfileImage")
+    public ResponseEntity<StatusResponse> downloadImage(
             @RequestParam("uid") String uid) {
-        imageService.deleteImage(uid);
+            String resourcePath = imageService.downloadImage(uid);
+            final StatusResponse response = new StatusResponse(StatusCode.OK, resourcePath);
+            return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    /**
+     * 이미지 삭제하기
+     *
+     * @param uid
+     */
+    @DeleteMapping("/auth/deleteProfileImage")
+    public ResponseEntity<StatusResponse> deleteImage(
+            @RequestParam("uid") String uid) {
+            imageService.deleteImage(uid);
+            final StatusResponse response = new StatusResponse(StatusCode.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+    }
+
 }

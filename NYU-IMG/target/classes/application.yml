@@ -8,8 +8,8 @@ cloud:
       auto: false
     credentials:
       instanceProfile: false
-      access-key: AKIA2XDBKJKQAZ6DIVNS
-      secret-key: 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
+      access-key: AKIA2XDBKJKQL2Y3SYPD
+      secret-key: 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
 
 spring:
   servlet:
