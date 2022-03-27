@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 HELP.md
 .gradle
 build/
@@ -38,3 +39,15 @@ out/
 
 ### Config ###
 NYU-IMG/src/main/resources/application.yml
+=======
+### Django ###
+NYU_Manage/*.log
+NYU_Manage/*.pot
+NYU_Manage/*.pyc
+NYU_Manage/__pycache__/
+NYU_Manage/local_settings.py
+NYU_Manage/db.sqlite3
+NYU_Manage/db.sqlite3-journal
+NYU_Manage/media
+NYU_Manage/.config_secret
+>>>>>>> aebd8f474ea8612efd8b86b17fbe4e4322fd45bb
