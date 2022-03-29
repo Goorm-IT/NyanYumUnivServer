@@ -15,5 +15,5 @@ public interface StoreMapper {
     List<StoreInfo> getStoreInfo(StoreSearchInfo storeSearchInfo) throws SQLException;
     List<StoreInfo> getMonthlyStore() throws SQLException;
     int getTotalCount() throws SQLException;
-
+    List<StoreInfo> getSearchStore(StoreSearchInfo storeSearchInfo) throws SQLException;
 }

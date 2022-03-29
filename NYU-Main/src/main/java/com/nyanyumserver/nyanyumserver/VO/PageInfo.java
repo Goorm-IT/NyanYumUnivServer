@@ -9,24 +9,20 @@ import java.util.List;
 @Data
 public class PageInfo implements Serializable {
     private int totalCount;
-    private int pageNo;
-    private int pageSize;
+    private int startPageNo;
+    private int endPageNo;
     private int startIndex;
+    private String option;
 
     public PageInfo(){
-
     }
-    public PageInfo(int totalCount, int pageNo, int pageSize, int startIndex){
+    public PageInfo(int totalCount, int startPageNo, int endPageNo, int startIndex, String option){
         this.totalCount = totalCount;
-        this.pageNo = pageNo;
-        this.pageSize = pageSize;
+        this.startPageNo = startPageNo;
+        this.endPageNo = endPageNo;
         this.startIndex = startIndex;
-    }
+        this.option = option;
 
-    private List<StoreInfo> storeInfos = new ArrayList<>();
-    public void addStoreInfos(List<StoreInfo> storeInfos) {
-        this.storeInfos.addAll(storeInfos);
     }
-
 
 }
