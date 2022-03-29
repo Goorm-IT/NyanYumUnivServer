@@ -93,6 +93,7 @@ public class UserController {
     public Object Register(
             @ApiParam(value = "uid (UserId)", required= true) @RequestParam(value = "uid", required =true) String uid,
             @ApiParam(value = "nickName (nickName)", required= true) @RequestParam("nickName") String nickName,
+            @ApiParam(value="Image", required = true) @RequestPart MultipartFile file,
             @ApiIgnore HttpSession session, HttpServletResponse response) {
 
 
@@ -110,6 +111,7 @@ public class UserController {
             return new ResponseEntity<>("이미 가입된 아이디 입니다.", HttpStatus.BAD_REQUEST);
         } else {
             try {
+
                 userService.getRegister(userSearchInfo);
                 return new ResponseEntity<>("회원가입 완료", HttpStatus.OK);
             } catch (Exception e) {
@@ -224,7 +226,7 @@ public class UserController {
             //"/Users/hantaemin/ProfileImage/" +
             file.transferTo(new File( CommonConst.MAIN_PATH + session.getAttribute("uid") + ".jpg"));
 
-            userSearchInfo.setPath((String) session.getAttribute(CommonConst.MAIN_PATH + session.getAttribute("uid") + ".jpg"));
+            userSearchInfo.setPath(CommonConst.MAIN_PATH + session.getAttribute("uid") + ".jpg");
 
             return new ResponseEntity<>("변경 완료", HttpStatus.OK);
 

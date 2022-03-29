@@ -15,7 +15,6 @@ public class StoreSearchInfo extends PageInfo implements Serializable {
     private  float score;
     private String commentId;
     private String category;
-    private String option;
 
     private List<StoreInfo> storeInfos = new ArrayList<>();
     public void addStoreInfos(List<StoreInfo> storeInfos) {

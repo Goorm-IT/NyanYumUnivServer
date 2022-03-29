@@ -10,7 +10,6 @@
     <select id="getStoreList" resultMap="StoreInfo">
         SELECT *
         FROM store s
-
             <where>
                 <if test="category != null">
                     s.category = #{category}
@@ -30,6 +29,7 @@
                     ORDER BY s.score DESC;
                 </when>
             </choose>
+        LIMIT #{endPageNo} OFFSET #{startPageNo}
     </select>
 
     <select id="getStoreInfo" resultMap="StoreInfo">
@@ -41,7 +41,23 @@
     <select id="getSearchStore" resultMap="StoreInfo">
         SELECT *
         FROM store
-        WHERE  storeId LIKE CONCAT ('%', #{storeId}, '%');
+        <where>
+            storeId LIKE CONCAT ('%', #{storeId}, '%');
+        </where>
+        <choose>
+            <when test="option == 'fastest'">
+                ORDER BY s.genDate DESC;
+            </when>
+            <when test="option == 'oldest'">
+                ORDER BY s.genDate ASC;
+            </when>
+            <when test="option == 'popular'">
+                ORDER BY s.like DESC;
+            </when>
+            <when test="option == 'highScore'">
+                ORDER BY s.score DESC;
+            </when>
+        </choose>
     </select>
 
     <select id="getMonthlyStore" resultMap="StoreInfo">

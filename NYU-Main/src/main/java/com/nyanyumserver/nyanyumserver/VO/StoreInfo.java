@@ -13,5 +13,4 @@ public class StoreInfo {
     private float score;
     private String commentId;
     private String category;
-    private String option;
 }
