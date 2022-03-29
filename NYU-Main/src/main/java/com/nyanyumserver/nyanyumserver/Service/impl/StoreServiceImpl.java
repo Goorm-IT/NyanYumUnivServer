@@ -17,7 +17,6 @@ public class StoreServiceImpl implements StoreService {
 
     public void getStoreList(StoreSearchInfo storeSearchInfo){
         try{
-            storeSearchInfo.setTotalCount(1);
             storeSearchInfo.addStoreInfos(storeMapper.getStoreList(storeSearchInfo));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -36,6 +35,14 @@ public class StoreServiceImpl implements StoreService {
         try{
             storeSearchInfo.addStoreInfos(storeMapper.getMonthlyStore());
         } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getSearchStore(StoreSearchInfo storeSearchInfo){
+        try{
+            storeSearchInfo.addStoreInfos(storeMapper.getSearchStore(storeSearchInfo));
+        }catch (SQLException e){
             e.printStackTrace();
         }
     }
