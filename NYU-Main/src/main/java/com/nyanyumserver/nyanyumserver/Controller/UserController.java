@@ -1,5 +1,6 @@
 package com.nyanyumserver.nyanyumserver.Controller;
 
+import com.nyanyumserver.nyanyumserver.Common.CommonConst;
 import com.nyanyumserver.nyanyumserver.Service.UserService;
 import com.nyanyumserver.nyanyumserver.VO.UserInfo;
 import com.nyanyumserver.nyanyumserver.VO.UserSearchInfo;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -27,7 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-
+@EnableSwagger2
 public class UserController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -74,7 +76,6 @@ public class UserController {
                 throw new Exception();
             }
             else{
-                userSearchInfo.getPath();
                 setUserSession(session, userSearchInfo.getUserInfos());
 
                 logger.debug("END. Login");
@@ -92,7 +93,14 @@ public class UserController {
     public Object Register(
             @ApiParam(value = "uid (UserId)", required= true) @RequestParam(value = "uid", required =true) String uid,
             @ApiParam(value = "nickName (nickName)", required= true) @RequestParam("nickName") String nickName,
+            @ApiParam(value="Image", required = true) @RequestPart MultipartFile file,
             @ApiIgnore HttpSession session, HttpServletResponse response) {
+
+
+        if (logger.isDebugEnabled()){
+            logger.debug("START. register");
+        }
+
         UserSearchInfo userSearchInfo = new UserSearchInfo();
 
         userSearchInfo.setUid(uid);
@@ -103,6 +111,7 @@ public class UserController {
             return new ResponseEntity<>("이미 가입된 아이디 입니다.", HttpStatus.BAD_REQUEST);
         } else {
             try {
+
                 userService.getRegister(userSearchInfo);
                 return new ResponseEntity<>("회원가입 완료", HttpStatus.OK);
             } catch (Exception e) {
@@ -116,6 +125,11 @@ public class UserController {
     @ApiOperation(value = "로그아웃")
     @GetMapping("/logout")
     public ResponseEntity<?> logOut(@ApiIgnore HttpSession session){
+
+        if (logger.isDebugEnabled()){
+            logger.debug("START. logout");
+        }
+
         session.invalidate();
         return new ResponseEntity<>("로그아웃", HttpStatus.OK);
     }
@@ -133,7 +147,14 @@ public class UserController {
     @ApiOperation(value = "유저정보")
     @GetMapping(value = "/info")
     public Object info(@ApiIgnore HttpSession session){
+
+        if (logger.isDebugEnabled()){
+            logger.debug("START. info");
+        }
+
         UserSearchInfo userSearchInfo = new UserSearchInfo();
+
+
         UserInfo userInfo = new UserInfo();
         userInfo.setUid((String) session.getAttribute("uid"));
         userInfo.setNickName((String) session.getAttribute("nickName"));
@@ -153,6 +174,11 @@ public class UserController {
     @PostMapping("/updateNickName")
     public Object updateNickName(@ApiParam(value = "nickName (nickName)", required= true) @RequestParam("nickName") String nickName,
                                  @ApiIgnore HttpSession session){
+
+        if (logger.isDebugEnabled()){
+            logger.debug("START. updateNickName");
+        }
+
         UserSearchInfo userSearchInfo = new UserSearchInfo();
 
 
@@ -181,7 +207,9 @@ public class UserController {
     public Object updateProfileImage(@ApiParam(value="Image", required = true) @RequestPart MultipartFile file,
                                      @ApiIgnore HttpSession session) throws IOException {
 
-        final String mainPath = "/Users/hantaemin/ProfileImage/";
+        if (logger.isDebugEnabled()){
+            logger.debug("START. updateProfileImage");
+        }
 
         // mac
         // final String mainPath = "//Users/hantaemin/ProfileImage/"
@@ -196,9 +224,9 @@ public class UserController {
 
             System.out.println(FileSystemView.getFileSystemView().getHomeDirectory().toString());
             //"/Users/hantaemin/ProfileImage/" +
-            file.transferTo(new File( "/home/ubuntu/Profile/" + session.getAttribute("uid") + ".jpg"));
+            file.transferTo(new File( CommonConst.MAIN_PATH + session.getAttribute("uid") + ".jpg"));
 
-            userSearchInfo.setPath((String) session.getAttribute(mainPath + session.getAttribute("uid") + ".jpg"));
+            userSearchInfo.setPath(CommonConst.MAIN_PATH + session.getAttribute("uid") + ".jpg");
 
             return new ResponseEntity<>("변경 완료", HttpStatus.OK);
 

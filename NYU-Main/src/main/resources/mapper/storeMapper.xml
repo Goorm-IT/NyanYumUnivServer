@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.nyanyumserver.nyanyumserver.mapper.storeMapper">
+<mapper namespace="com.nyanyumserver.nyanyumserver.mapper.StoreMapper">
     <resultMap type="com.nyanyumserver.nyanyumserver.VO.StoreInfo" id="StoreInfo">
         <result column="storeId" property="storeId"/>
         <result column="address" property="address" />
@@ -9,6 +9,62 @@
     </resultMap>
     <select id="getStoreList" resultMap="StoreInfo">
         SELECT *
-        FROM store
+        FROM store s
+            <where>
+                <if test="category != null">
+                    s.category = #{category}
+                </if>
+            </where>
+            <choose>
+                <when test="option == 'fastest'">
+                    ORDER BY s.genDate DESC;
+                </when>
+                <when test="option == 'oldest'">
+                    ORDER BY s.genDate ASC;
+                </when>
+                <when test="option == 'popular'">
+                    ORDER BY s.like DESC;
+                </when>
+                <when test="option == 'highScore'">
+                    ORDER BY s.score DESC;
+                </when>
+            </choose>
+        LIMIT #{endPageNo} OFFSET #{startPageNo}
     </select>
+
+    <select id="getStoreInfo" resultMap="StoreInfo">
+        SELECT *
+        FROM store
+        WHERE  storeId = #{storeId};
+    </select>
+
+    <select id="getSearchStore" resultMap="StoreInfo">
+        SELECT *
+        FROM store
+        <where>
+            storeId LIKE CONCAT ('%', #{storeId}, '%');
+        </where>
+        <choose>
+            <when test="option == 'fastest'">
+                ORDER BY s.genDate DESC;
+            </when>
+            <when test="option == 'oldest'">
+                ORDER BY s.genDate ASC;
+            </when>
+            <when test="option == 'popular'">
+                ORDER BY s.like DESC;
+            </when>
+            <when test="option == 'highScore'">
+                ORDER BY s.score DESC;
+            </when>
+        </choose>
+    </select>
+
+    <select id="getMonthlyStore" resultMap="StoreInfo">
+        SELECT *
+        FROM store
+        ORDER BY monthlyVote DESC
+        LIMIT 5;
+    </select>
+
 </mapper>
