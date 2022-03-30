@@ -3,12 +3,16 @@ package com.nyanyumserver.nyuimg.Global.error;
 import com.nyanyumserver.nyuimg.Global.error.exception.BusinessException;
 import com.nyanyumserver.nyuimg.Global.error.exception.ErrorCode;
 import java.nio.file.AccessDeniedException;
+
+import com.nyanyumserver.nyuimg.Global.status.StatusCode;
+import com.nyanyumserver.nyuimg.Global.status.StatusResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -60,6 +64,35 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getStatus()));
     }
 
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    protected ResponseEntity<ErrorResponse> handleException(MissingServletRequestParameterException e) {
+        log.error("handleEntityNotFoundException", e);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     *
+     * Not Found Image -> Entity X, httpStatus code = 204
+     * client process : To load default image
+     */
+    @ExceptionHandler(NullPointerException.class)
+    protected ResponseEntity<StatusResponse> handleException(NullPointerException e) {
+        log.error("NullPointerException", e);
+        final StatusResponse response = new StatusResponse(StatusCode.NO_CONTENT);
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     *
+     * 사용자 전송 파일 없음
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<ErrorResponse> handleException(IllegalArgumentException e) {
+        log.error("IllegalArgumentException", e);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ErrorResponse> handleException(Exception e) {
