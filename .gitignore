@@ -39,9 +39,6 @@ out/
 ### Config ###
 NYU-IMG/src/main/resources/application.yml
 NYU-IMG/target/classes/application.yml
-NYU-Main/src/main/resources/application.properties
-NYU-Main/target/classes/application.properties
-NYU-Main/src/main/resources/application.yml
 
 ### Django ###
 NYU_Manage/*.log
@@ -53,4 +50,3 @@ NYU_Manage/db.sqlite3
 NYU_Manage/db.sqlite3-journal
 NYU_Manage/media
 NYU_Manage/.config_secret
-
