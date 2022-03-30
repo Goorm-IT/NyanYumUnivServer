@@ -28,9 +28,9 @@ public class ImageController {
     public ResponseEntity<StatusResponse> uploadImage(
             @RequestParam("uid") String uid,
             @RequestPart(value = "file") MultipartFile multipartFile) {
-            imageService.uploadImage(uid, multipartFile);
-            final StatusResponse response = new StatusResponse(StatusCode.NO_CONTENT);
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            String resourcePath = imageService.uploadImage(uid, multipartFile);
+            final StatusResponse response = new StatusResponse(StatusCode.OK, resourcePath);
+            return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     /**
@@ -56,8 +56,8 @@ public class ImageController {
     public ResponseEntity<StatusResponse> deleteImage(
             @RequestParam("uid") String uid) {
             imageService.deleteImage(uid);
-            final StatusResponse response = new StatusResponse(StatusCode.NO_CONTENT);
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            final StatusResponse response = new StatusResponse(StatusCode.OK, uid);
+            return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

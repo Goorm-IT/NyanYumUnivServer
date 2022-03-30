@@ -27,7 +27,7 @@ public class ImageServiceImpl implements ImageService {
 
     private void validateFileExists(MultipartFile multipartFile) {
         if (multipartFile.isEmpty()) {
-            throw new IllegalArgumentException("Not Found File"); // Image Not Exist
+            throw new IllegalArgumentException("The upload file is empty"); // Image Not Exist
         }
     }
 
@@ -62,7 +62,7 @@ public class ImageServiceImpl implements ImageService {
 
     }
 
-    public void uploadImage(String uid, MultipartFile multipartFile) {
+    public String uploadImage(String uid, MultipartFile multipartFile) {
         validateFileExists(multipartFile);
 
         String fileName = buildFileName(uid, multipartFile.getOriginalFilename());
@@ -77,10 +77,11 @@ public class ImageServiceImpl implements ImageService {
         try (InputStream inputStream = multipartFile.getInputStream()) {
             amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
+            return downloadImage(uid);
 
-        } catch (IOException e) { // Converting File Error
+        } catch (IOException e) { // 파일 변환 에러
             e.printStackTrace();
-            throw new IllegalArgumentException(String.format("Converting File Error (%s)", multipartFile.getOriginalFilename()));
+            throw new IllegalArgumentException(String.format("Converting File Error (uid : %s)", multipartFile.getOriginalFilename()));
         }
     }
 
@@ -88,13 +89,17 @@ public class ImageServiceImpl implements ImageService {
     public String downloadImage(String uid) {
             String resourcePath = amazonS3.getUrl(bucket, buildObjectKey(uid)).toString();
             if (buildObjectKey(uid) == null) {
-                throw new IllegalArgumentException(String.format("Not Found File"));
+                throw new NullPointerException(String.format("Not Found Image (uid : %s)", uid));
             }
             System.out.println("imageUrl : " + resourcePath);
             return resourcePath;
     }
 
     public void deleteImage(String uid) {
-        amazonS3.deleteObject(bucket, buildObjectKey(uid));
+        String deleteObjectKey = buildObjectKey(uid);
+        if (deleteObjectKey == null) {
+            throw new NullPointerException(String.format("Delete Request Rejected For Not Found Image(uid : %s)", uid));
+        }
+        amazonS3.deleteObject(bucket, deleteObjectKey);
     }
 }
