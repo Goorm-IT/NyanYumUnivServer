@@ -3,6 +3,7 @@ package com.nyanyumserver.nyanyumserver.Service.impl;
 import com.nyanyumserver.nyanyumserver.Service.StoreService;
 import com.nyanyumserver.nyanyumserver.VO.StoreSearchInfo;
 import com.nyanyumserver.nyanyumserver.mapper.StoreMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,11 +11,12 @@ import java.sql.SQLException;
 
 
 @Service("StoreService")
+@RequiredArgsConstructor
 public class StoreServiceImpl implements StoreService {
 
-    @Autowired
-    StoreMapper storeMapper;
+    private final StoreMapper storeMapper;
 
+    @Override
     public void getStoreList(StoreSearchInfo storeSearchInfo){
         try{
             storeSearchInfo.addStoreInfos(storeMapper.getStoreList(storeSearchInfo));
@@ -22,7 +24,7 @@ public class StoreServiceImpl implements StoreService {
             e.printStackTrace();
         }
     }
-
+    @Override
     public void getStoreInfo(StoreSearchInfo storeSearchInfo){
         try{
             storeSearchInfo.addStoreInfos(storeMapper.getStoreInfo(storeSearchInfo));
@@ -30,7 +32,7 @@ public class StoreServiceImpl implements StoreService {
             e.printStackTrace();
         }
     }
-
+    @Override
     public void getMonthlyStore(StoreSearchInfo storeSearchInfo){
         try{
             storeSearchInfo.addStoreInfos(storeMapper.getMonthlyStore());
@@ -38,7 +40,7 @@ public class StoreServiceImpl implements StoreService {
             e.printStackTrace();
         }
     }
-
+    @Override
     public void getSearchStore(StoreSearchInfo storeSearchInfo){
         try{
             storeSearchInfo.addStoreInfos(storeMapper.getSearchStore(storeSearchInfo));

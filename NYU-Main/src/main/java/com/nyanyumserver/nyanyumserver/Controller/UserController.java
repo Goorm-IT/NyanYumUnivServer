@@ -34,9 +34,7 @@ public class UserController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    UserService userService;
-
+    private final UserService userService;
 
     public String getSessionUid(HttpSession session){
         return (String) session.getAttribute("uid");
@@ -93,7 +91,6 @@ public class UserController {
     public Object Register(
             @ApiParam(value = "uid (UserId)", required= true) @RequestParam(value = "uid", required =true) String uid,
             @ApiParam(value = "nickName (nickName)", required= true) @RequestParam("nickName") String nickName,
-            @ApiParam(value="Image", required = true) @RequestPart MultipartFile file,
             @ApiIgnore HttpSession session, HttpServletResponse response) {
 
 
@@ -111,7 +108,6 @@ public class UserController {
             return new ResponseEntity<>("이미 가입된 아이디 입니다.", HttpStatus.BAD_REQUEST);
         } else {
             try {
-
                 userService.getRegister(userSearchInfo);
                 return new ResponseEntity<>("회원가입 완료", HttpStatus.OK);
             } catch (Exception e) {
@@ -217,7 +213,7 @@ public class UserController {
         UserSearchInfo userSearchInfo = new UserSearchInfo();
 
         try{
-         userSearchInfo.setUid((String) session.getAttribute("uid"));
+            userSearchInfo.setUid((String) session.getAttribute("uid"));
 
             // where MainPath
             // System.out.println(FileSystemView.getFileSystemView().getHomeDirectory().toString());
