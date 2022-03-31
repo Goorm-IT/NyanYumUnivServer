@@ -1,21 +1,27 @@
-package com.nyanyumserver.nyuimg.Global.error;
+package com.nyanyumserver.nyuimg.global.error;
 
-import com.nyanyumserver.nyuimg.Global.error.exception.BusinessException;
-import com.nyanyumserver.nyuimg.Global.error.exception.ErrorCode;
+import com.nyanyumserver.nyuimg.global.error.exception.BusinessException;
+import com.nyanyumserver.nyuimg.global.error.exception.EntityNotFoundException;
+import com.nyanyumserver.nyuimg.global.error.exception.ErrorCode;
+
+import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 
-import com.nyanyumserver.nyuimg.Global.status.StatusCode;
-import com.nyanyumserver.nyuimg.Global.status.StatusResponse;
+import com.nyanyumserver.nyuimg.global.status.StatusCode;
+import com.nyanyumserver.nyuimg.global.status.StatusResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 
 @ControllerAdvice
 @Slf4j
@@ -83,15 +89,29 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
 
-    /**
-     *
-     * 사용자 전송 파일 없음
-     */
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<ErrorResponse> handleException(IllegalArgumentException e) {
         log.error("IllegalArgumentException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE);
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.UNSUPPORTED_MEDIA_TYPE);
+        return new ResponseEntity<>(response, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    protected ResponseEntity<ErrorResponse> handleMaxUploadSizeExceededException(
+            MaxUploadSizeExceededException e) {
+        log.info("handleMaxUploadSizeExceededException", e);
+
+        ErrorResponse response = ErrorResponse.of(ErrorCode.FILE_SIZE_EXCEED);
+        return new ResponseEntity<>(response, HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE);
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    protected ResponseEntity<ErrorResponse> handleMultipartException(
+            MultipartException e) {
+        log.info("handleMultipartException", e);
+
+        ErrorResponse response = ErrorResponse.of(ErrorCode.EXPECTATION_FAILED);
+        return new ResponseEntity<>(response, HttpStatus.EXPECTATION_FAILED);
     }
 
     @ExceptionHandler(Exception.class)

@@ -1,4 +1,4 @@
-package com.nyanyumserver.nyuimg.Global.error.exception;
+package com.nyanyumserver.nyuimg.global.error.exception;
 
 
 public class BusinessException extends RuntimeException {

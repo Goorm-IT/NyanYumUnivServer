@@ -1,4 +1,4 @@
-package com.nyanyumserver.nyuimg.Global.error.exception;
+package com.nyanyumserver.nyuimg.global.error.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -12,6 +12,10 @@ public enum ErrorCode {
     INVALID_TYPE_VALUE(400, "C005", " Invalid Type Value"),
     HANDLE_ACCESS_DENIED(403, "C006", "Access is Denied"),
     BAD_REQUEST(400, "C007", " Bad Request"),
+    UNSUPPORTED_MEDIA_TYPE(415, "C008", "UNSUPPORTED_MEDIA_TYPE"),
+    FILE_SIZE_EXCEED(416, "C009", "REQUESTED_RANGE_NOT_SATISFIABLE"),
+    EXPECTATION_FAILED(417, "C010", "EXPECTATION_FAILED")
+
 
 
     ;
