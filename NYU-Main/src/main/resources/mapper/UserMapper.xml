@@ -17,8 +17,8 @@
     </select>
 
     <select id="getRegister" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo" resultMap="UserInfo">
-        INSERT INTO user (uid, nickName)
-        VALUES (#{uid}, #{nickName})
+        INSERT INTO user (uid, nickname, registerDate)
+        VALUES (#{uid}, #{nickName}, #{registerDate})
     </select>
 
     <select id="getSecession" parameterType="java.lang.String">
