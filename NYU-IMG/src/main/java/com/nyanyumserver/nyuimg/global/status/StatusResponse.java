@@ -1,18 +1,26 @@
-package com.nyanyumserver.nyuimg.Global.status;
+package com.nyanyumserver.nyuimg.global.status;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.net.URI;
 
+@ApiModel(value = "모델 태그 정보")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class StatusResponse {
-
-    private String message;
-    private int status;
+    @ApiModelProperty(value = "이미지 url",name = "entity", example = "https://nyu-img-bucket.s3.ap-northeast-2.amazonaws.com/{uid}/{filename}", required = true)
     private String entity;
+    @ApiModelProperty(value = "상태 메시지",name = "message", example = "OK", required = true)
+    private String message;
+    @ApiModelProperty(value = "상태 코드",name = "status", example = "200", required = true)
+    private int status;
+    @ApiModelProperty(value = "리다이렉트 url",name = "redirect", example = "null", required = true)
     private URI redirect;
 
 

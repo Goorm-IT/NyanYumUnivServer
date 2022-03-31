@@ -1,4 +1,4 @@
-package com.nyanyumserver.nyuimg.Service.component;
+package com.nyanyumserver.nyuimg.service.component;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

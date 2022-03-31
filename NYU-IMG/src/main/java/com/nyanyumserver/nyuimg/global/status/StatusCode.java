@@ -1,4 +1,4 @@
-package com.nyanyumserver.nyuimg.Global.status;
+package com.nyanyumserver.nyuimg.global.status;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
