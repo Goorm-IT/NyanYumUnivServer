@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nyanyumserver.nyanyumserver.mapper.AdminMapper">
+    <resultMap type="com.nyanyumserver.nyanyumserver.VO.UserInfo" id="UserInfo">
+    </resultMap>
+    <select id="getAllUsers" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo" resultMap="UserInfo">
+        SELECT *
+        FROM user
+    </select>
+</mapper>
