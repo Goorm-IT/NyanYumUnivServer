@@ -2,11 +2,14 @@ package com.nyanyumserver.nyuimg;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+@EnableWebMvc
 @SpringBootApplication
 public class NyuImgApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(NyuImgApplication.class, args);
     }
 
