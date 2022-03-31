@@ -1,8 +1,8 @@
-package com.nyanyumserver.nyuimg.Service.impl;
+package com.nyanyumserver.nyuimg.service.impl;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
-import com.nyanyumserver.nyuimg.Service.ImageService;
+import com.nyanyumserver.nyuimg.service.ImageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service("ImageService")
@@ -21,6 +21,7 @@ public class ImageServiceImpl implements ImageService {
     private final AmazonS3 amazonS3;
     private final String UID_PREFIX = "/";
     private final String FILE_EXTENSION_SEPARATOR = ".";
+    private final List<String> FILE_EXTENSION_ALLOW =  Arrays.asList(".bmp", ".jpeg", ".jpg", ".png", ".tif", ".tiff", ".svg");
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -34,6 +35,11 @@ public class ImageServiceImpl implements ImageService {
     private String buildFileName(String uid, String originalFileName) {
         int fileExtensionIndex = originalFileName.lastIndexOf(FILE_EXTENSION_SEPARATOR);
         String fileExtension = originalFileName.substring(fileExtensionIndex);
+        Optional<String> anyExtension = FILE_EXTENSION_ALLOW.stream()
+                .filter(s -> s.equals(fileExtension)).findAny();
+        if (anyExtension.isEmpty()) {
+            throw new IllegalArgumentException("The file's extension is invalid"); // file extension invalid
+        }
         String fileName = originalFileName.substring(0, fileExtensionIndex);
 
         return uid + UID_PREFIX + fileName + fileExtension;
@@ -52,14 +58,6 @@ public class ImageServiceImpl implements ImageService {
             }
         }
         return null;
-        /**
-         * Load S3 default Image
-         */
-//        URI redirectUri = new URI("");
-//        final StatusResponse response = new StatusResponse(StatusCode.SEE_OTHER, redirectUri);
-//        return new ResponseEntity<>(response, HttpStatus.SEE_OTHER);
-//        throw new IllegalArgumentException("Image Not Exist"); // Image Not Exist -> default Image
-
     }
 
     public String uploadImage(String uid, MultipartFile multipartFile) {
@@ -67,7 +65,7 @@ public class ImageServiceImpl implements ImageService {
 
         String fileName = buildFileName(uid, multipartFile.getOriginalFilename());
 
-        if (buildObjectKey(uid) != null){ // 파일이 이미 있을 경우 삭제 먼저 진행
+        if (buildObjectKey(uid) != null){ // file exist -> delete
             deleteImage(uid);
         }
 
@@ -79,7 +77,7 @@ public class ImageServiceImpl implements ImageService {
                     .withCannedAcl(CannedAccessControlList.PublicRead));
             return downloadImage(uid);
 
-        } catch (IOException e) { // 파일 변환 에러
+        } catch (IOException e) { // converting file error
             e.printStackTrace();
             throw new IllegalArgumentException(String.format("Converting File Error (uid : %s)", multipartFile.getOriginalFilename()));
         }

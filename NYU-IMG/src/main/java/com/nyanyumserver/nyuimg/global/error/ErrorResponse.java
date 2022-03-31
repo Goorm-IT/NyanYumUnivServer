@@ -1,6 +1,6 @@
-package com.nyanyumserver.nyuimg.Global.error;
+package com.nyanyumserver.nyuimg.global.error;
 
-import com.nyanyumserver.nyuimg.Global.error.exception.ErrorCode;
+import com.nyanyumserver.nyuimg.global.error.exception.ErrorCode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

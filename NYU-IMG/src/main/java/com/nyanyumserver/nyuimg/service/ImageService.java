@@ -1,4 +1,4 @@
-package com.nyanyumserver.nyuimg.Service;
+package com.nyanyumserver.nyuimg.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
