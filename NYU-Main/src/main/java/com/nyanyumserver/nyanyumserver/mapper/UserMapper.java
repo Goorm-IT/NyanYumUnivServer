@@ -13,5 +13,6 @@ public interface UserMapper {
     List<UserInfo> getRegister(UserSearchInfo userSearchInfo) throws SQLException;
     void getSecession(String uid) throws SQLException;
     boolean getUpdateNickName(UserSearchInfo userSearchInfo);
+    boolean getUpdatePath(UserSearchInfo userSearchInfo);
     String getUid(UserSearchInfo userSearchInfo);
 }
