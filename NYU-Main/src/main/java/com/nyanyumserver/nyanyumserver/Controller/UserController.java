@@ -232,7 +232,6 @@ public class UserController {
 
             System.out.println(FileSystemView.getFileSystemView().getHomeDirectory().toString());
             //"/Users/hantaemin/ProfileImage/" +
-<<<<<<< HEAD
 //            file.transferTo(new File( "/home/ubuntu/Profile/" + session.getAttribute("uid") + ".jpg"));
 //
 //            userSearchInfo.setPath((String) session.getAttribute(mainPath + session.getAttribute("uid") + ".jpg"));
