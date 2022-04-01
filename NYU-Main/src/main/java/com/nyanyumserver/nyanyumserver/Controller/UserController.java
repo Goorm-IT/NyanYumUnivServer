@@ -215,7 +215,9 @@ public class UserController {
     public Object updateProfileImage(@ApiParam(value="Image", required = true) @RequestPart MultipartFile file,
                                      @ApiIgnore HttpSession session) throws IOException {
 
-        final String mainPath = "/Users/hantaemin/ProfileImage/";
+        if (logger.isDebugEnabled()){
+            logger.debug("START. updateProfileImage");
+        }
 
         // mac
         // final String mainPath = "//Users/hantaemin/ProfileImage/"
@@ -230,6 +232,7 @@ public class UserController {
 
             System.out.println(FileSystemView.getFileSystemView().getHomeDirectory().toString());
             //"/Users/hantaemin/ProfileImage/" +
+<<<<<<< HEAD
 //            file.transferTo(new File( "/home/ubuntu/Profile/" + session.getAttribute("uid") + ".jpg"));
 //
 //            userSearchInfo.setPath((String) session.getAttribute(mainPath + session.getAttribute("uid") + ".jpg"));
