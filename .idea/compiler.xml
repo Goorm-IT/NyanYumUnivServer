@@ -7,13 +7,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="NyanYumServer" />
+        <module name="NYU-IMG" />
         <module name="NyanYumUnivServer" />
+        <module name="NyanYumServer" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="NYU-IMG" options="-parameters" />
       <module name="NyanYumServer" options="-parameters" />
       <module name="NyanYumUnivServer" options="-parameters" />
     </option>

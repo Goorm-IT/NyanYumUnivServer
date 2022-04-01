@@ -9,11 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.nyanyumserver.nyuimg.service.ImageService;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
+@EnableSwagger2
 public class ImageController {
     private final ImageService imageService;
 

@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -53,6 +55,12 @@ public class UserController {
     public void setUpdateNickName(HttpSession session, String nickName){
         session.removeAttribute("nickName");
         session.setAttribute("nickName", nickName);
+    }
+
+
+    public void setUpdatePath(HttpSession session, String path){
+        session.removeAttribute("path");
+        session.setAttribute("path", path);
     }
 
 
@@ -202,7 +210,7 @@ public class UserController {
 
     }
 
-    @ApiOperation(value = "프로필 사진 등록")
+    @ApiOperation(value = "프로필 사진 변경")
     @PutMapping("/updateProfileImage")
     public Object updateProfileImage(@ApiParam(value="Image", required = true) @RequestPart MultipartFile file,
                                      @ApiIgnore HttpSession session) throws IOException {
@@ -217,22 +225,44 @@ public class UserController {
         UserSearchInfo userSearchInfo = new UserSearchInfo();
 
         try{
-         userSearchInfo.setUid((String) session.getAttribute("uid"));
+            userSearchInfo.setUid((String) session.getAttribute("uid"));
 
             // where MainPath
             // System.out.println(FileSystemView.getFileSystemView().getHomeDirectory().toString());
 
             System.out.println(FileSystemView.getFileSystemView().getHomeDirectory().toString());
             //"/Users/hantaemin/ProfileImage/" +
-            file.transferTo(new File( CommonConst.MAIN_PATH + session.getAttribute("uid") + ".jpg"));
+//            file.transferTo(new File( "/home/ubuntu/Profile/" + session.getAttribute("uid") + ".jpg"));
+//
+//            userSearchInfo.setPath((String) session.getAttribute(mainPath + session.getAttribute("uid") + ".jpg"));
 
-            userSearchInfo.setPath(CommonConst.MAIN_PATH + session.getAttribute("uid") + ".jpg");
+            // Sending profile image to 'nyu-img server'
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            MultiValueMap<String, Object> body  = new LinkedMultiValueMap<>();
+            body.add("file", file.getResource());
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+            String serverUrl = String.format("http://localhost:81/auth/updateProfileImage?uid=%s", session.getAttribute("uid"));
+            RestTemplate restTemplate = new RestTemplate();
+            System.out.println(restTemplate);
+            ResponseEntity<String> response = restTemplate.postForEntity(serverUrl, requestEntity, String.class);
+
+            String resBody = response.getBody();
+            String tag[] = resBody.split("\""); // Extract file uri from responseEntity
+            userSearchInfo.setPath(tag[3]);
+
+
+            if(userService.getUpdatePath(userSearchInfo)){
+                setUpdatePath(session, userSearchInfo.getPath());
+            }else{
+                throw new SQLException();
+            }
 
             return new ResponseEntity<>("변경 완료", HttpStatus.OK);
 
-        } catch (IOException e){
+        } catch (Exception e){
+
             return new ResponseEntity<>("변경 실패", HttpStatus.BAD_REQUEST);
         }
     }
-
 }
