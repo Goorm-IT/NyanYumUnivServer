@@ -9,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class NyuImgApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(NyuImgApplication.class, args);
     }
 

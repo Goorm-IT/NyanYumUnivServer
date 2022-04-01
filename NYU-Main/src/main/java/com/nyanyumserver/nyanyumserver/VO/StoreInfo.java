@@ -10,6 +10,7 @@ import lombok.Setter;
 public class StoreInfo {
     private String storeId;
     private String address;
-    private  float score;
+    private float score;
     private String commentId;
+    private String category;
 }
