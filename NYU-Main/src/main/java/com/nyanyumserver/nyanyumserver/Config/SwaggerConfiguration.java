@@ -14,6 +14,8 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Configuration
 @EnableSwagger2
@@ -32,5 +34,17 @@ public class SwaggerConfiguration {
                 .description("USER")
                 .version("1.0.0")
                 .build();
+    }
+
+    private Set<String> getConsumeContentTypes() {
+        Set<String> consumes = new HashSet<>();
+        consumes.add("application/json");
+        return consumes;
+    }
+
+    private Set<String> getProduceContentTypes() {
+        Set<String> produces = new HashSet<>();
+        produces.add("application/json");
+        return produces;
     }
 }

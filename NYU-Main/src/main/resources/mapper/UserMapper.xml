@@ -17,8 +17,8 @@
     </select>
 
     <select id="getRegister" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo" resultMap="UserInfo">
-        INSERT INTO user (uid, nickName)
-        VALUES (#{uid}, #{nickName})
+        INSERT INTO user (uid, nickname, registerDate)
+        VALUES (#{uid}, #{nickName}, #{registerDate})
     </select>
 
     <select id="getSecession" parameterType="java.lang.String">
@@ -29,6 +29,12 @@
     <update id="getUpdateNickName" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo">
         UPDATE user
         SET nickName = #{nickName}
+        WHERE uid = #{uid}
+    </update>
+
+    <update id="getUpdatePath" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo">
+        UPDATE user
+        SET path = #{path}
         WHERE uid = #{uid}
     </update>
 

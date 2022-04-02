@@ -40,6 +40,9 @@ out/
 NYU-IMG/src/main/resources/application.yml
 <<<<<<< HEAD
 NYU-IMG/target/classes/application.yml
+NYU-Main/src/main/resources/application.properties
+NYU-Main/target/classes/application.properties
+NYU-Main/src/main/resources/application.yml
 
 ### Django ###
 NYU_Manage/*.log

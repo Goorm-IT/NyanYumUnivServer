@@ -10,6 +10,7 @@
         <module name="NYU-IMG" />
         <module name="NyanYumServer" />
         <module name="NyanYumUnivServer" />
+        <module name="NyanYumServer" />
       </profile>
     </annotationProcessing>
   </component>

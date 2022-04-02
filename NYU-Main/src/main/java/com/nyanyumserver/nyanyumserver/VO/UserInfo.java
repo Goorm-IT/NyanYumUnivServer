@@ -1,11 +1,10 @@
 package com.nyanyumserver.nyanyumserver.VO;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.core.io.FileSystemResource;
+import lombok.Data;
 
-@Getter
-@Setter
+import java.time.LocalDate;
+
+@Data
 public class UserInfo {
     private String uid;
     private String nickName;
@@ -13,4 +12,5 @@ public class UserInfo {
     private String postId;
     private String path;
     private String profileImg;
+    private LocalDate registerDate;
 }
