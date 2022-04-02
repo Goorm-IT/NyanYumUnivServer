@@ -38,6 +38,7 @@ out/
 
 ### Config ###
 NYU-IMG/src/main/resources/application.yml
+<<<<<<< HEAD
 NYU-IMG/target/classes/application.yml
 
 ### Django ###
