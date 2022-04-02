@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="NYU-IMG" />
+        <module name="NyanYumServer" />
         <module name="NyanYumUnivServer" />
         <module name="NyanYumServer" />
       </profile>
