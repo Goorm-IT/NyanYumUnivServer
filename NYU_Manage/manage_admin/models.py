@@ -35,7 +35,10 @@ class Comment(models.Model):
 
 class Menu(models.Model):
     # Field name made lowercase.
-    storeid = models.CharField(db_column='storeId', max_length=50)
+    menuid = models.CharField(
+        db_column='menuId', primary_key=True, max_length=50)
+    storeid = models.ForeignKey(
+        'Store', models.DO_NOTHING, db_column='storeId', blank=True)
     # Field name made lowercase.
     menualias = models.CharField(
         db_column='menuAlias', max_length=50, blank=True, null=True)
@@ -59,6 +62,12 @@ class Store(models.Model):
     # Field name made lowercase.
     commentid = models.CharField(
         db_column='commentId', max_length=50, blank=True, null=True)
+    category = models.CharField(max_length=50, blank=True)
+    monthlyvote = models.IntegerField(
+        blank=True, null=True, default=0)
+    like = models.IntegerField(blank=True, default=0)
+    gendate = models.DateField(blank=True, null=True)
+    scorecount = models.IntegerField(blank=True)
 
     class Meta:
         managed = False
