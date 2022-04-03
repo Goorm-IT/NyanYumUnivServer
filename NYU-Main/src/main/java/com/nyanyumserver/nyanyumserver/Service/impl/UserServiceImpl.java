@@ -47,6 +47,11 @@ public class UserServiceImpl implements UserService{
         return userMapper.getUpdateNickName(userSearchInfo);
     }
 
+
+    public boolean getUpdatePath(UserSearchInfo userSearchInfo){
+        return userMapper.getUpdatePath(userSearchInfo);
+    }
+
     public String getUid(UserSearchInfo userSearchInfo){
         return userMapper.getUid(userSearchInfo);
     }

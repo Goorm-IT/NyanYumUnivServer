@@ -32,4 +32,10 @@
         WHERE uid = #{uid}
     </update>
 
+    <update id="getUpdatePath" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo">
+        UPDATE user
+        SET path = #{path}
+        WHERE uid = #{uid}
+    </update>
+
 </mapper>
