@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Data
 public class UserInfo {
     private String uid;
-    private String nickName;
+    private String userAlias;
     private String userLevel;
     private String postId;
     private String path;
