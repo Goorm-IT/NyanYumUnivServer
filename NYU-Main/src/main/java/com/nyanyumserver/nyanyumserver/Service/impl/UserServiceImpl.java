@@ -43,8 +43,8 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    public boolean getUpdateNickName(UserSearchInfo userSearchInfo){
-        return userMapper.getUpdateNickName(userSearchInfo);
+    public boolean getUpdateUserAlias(UserSearchInfo userSearchInfo){
+        return userMapper.getUpdateUserAlias(userSearchInfo);
     }
 
 

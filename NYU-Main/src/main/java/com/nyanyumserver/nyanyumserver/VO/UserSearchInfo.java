@@ -13,7 +13,7 @@ import java.util.List;
 public class UserSearchInfo {
     @ApiModelProperty(example = "123")
     private String uid;
-    private String nickName;
+    private String userAlias;
     private String userLevel;
     private String postId;
     private String path;
