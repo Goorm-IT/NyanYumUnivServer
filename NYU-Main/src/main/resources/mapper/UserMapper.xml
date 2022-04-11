@@ -3,7 +3,7 @@
 <mapper namespace="com.nyanyumserver.nyanyumserver.mapper.UserMapper">
     <resultMap type="com.nyanyumserver.nyanyumserver.VO.UserInfo" id="UserInfo">
         <result column="uid" property="uid"/>
-        <result column="nickName" property="nickName" />
+        <result column="userAlias" property="userAlias" />
     </resultMap>
     <select id="getUid" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo" resultType="String">
         SELECT uid
@@ -17,8 +17,8 @@
     </select>
 
     <select id="getRegister" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo" resultMap="UserInfo">
-        INSERT INTO user (uid, nickname, registerDate)
-        VALUES (#{uid}, #{nickName}, #{registerDate})
+        INSERT INTO user (uid, useralias, registerDate)
+        VALUES (#{uid}, #{userAlias}, #{registerDate})
     </select>
 
     <select id="getSecession" parameterType="java.lang.String">
@@ -26,9 +26,9 @@
         WHERE uid = #{uid}
     </select>
 
-    <update id="getUpdateNickName" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo">
+    <update id="getUpdateUserAlias" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo">
         UPDATE user
-        SET nickName = #{nickName}
+        SET useralias = #{userAlias}
         WHERE uid = #{uid}
     </update>
 

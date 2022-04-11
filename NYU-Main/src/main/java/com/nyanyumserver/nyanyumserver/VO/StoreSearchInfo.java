@@ -16,6 +16,8 @@ public class StoreSearchInfo extends PageInfo implements Serializable {
     private String commentId;
     private String category;
 
+    private MenuInfo menuInfo;
+
     private List<StoreInfo> storeInfos = new ArrayList<>();
     public void addStoreInfos(List<StoreInfo> storeInfos) {
         this.storeInfos.addAll(storeInfos);
