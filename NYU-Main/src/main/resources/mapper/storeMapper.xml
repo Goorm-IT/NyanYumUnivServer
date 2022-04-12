@@ -29,13 +29,14 @@
                     ORDER BY s.score DESC;
                 </when>
             </choose>
-        LIMIT #{endPageNo} OFFSET #{startPageNo}
+        LIMIT #{endPageNo} OFFSET #{startPageNo};
     </select>
 
     <select id="getStoreInfo" resultMap="StoreInfo">
         SELECT *
-        FROM store
-        WHERE  storeId = #{storeId};
+        FROM store s
+        JOIN menu m
+        ON s.storeId = #{storeId};
     </select>
 
     <select id="getSearchStore" resultMap="StoreInfo">

@@ -1,6 +1,5 @@
 package com.nyanyumserver.nyanyumserver.Controller;
 
-import com.nyanyumserver.nyanyumserver.Common.CommonConst;
 import com.nyanyumserver.nyanyumserver.Service.UserService;
 import com.nyanyumserver.nyanyumserver.VO.UserInfo;
 import com.nyanyumserver.nyanyumserver.VO.UserSearchInfo;
@@ -9,7 +8,6 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -22,7 +20,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.swing.filechooser.FileSystemView;
-import java.io.*;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,9 +34,7 @@ public class UserController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    UserService userService;
-
+    private final UserService userService;
 
     public String getSessionUid(HttpSession session){
         return (String) session.getAttribute("uid");
@@ -46,15 +42,15 @@ public class UserController {
 
     public void setUserSession(HttpSession session, List<UserInfo> getUserInfos){
         session.setAttribute("uid", getUserInfos.get(0).getUid());
-        session.setAttribute("nickName", getUserInfos.get(0).getNickName());
+        session.setAttribute("userAlias", getUserInfos.get(0).getUserAlias());
         session.setAttribute("userLevel", getUserInfos.get(0).getUserLevel());
         session.setAttribute("postId", getUserInfos.get(0).getPostId());
         session.setAttribute("path", getUserInfos.get(0).getPath());
     }
 
-    public void setUpdateNickName(HttpSession session, String nickName){
-        session.removeAttribute("nickName");
-        session.setAttribute("nickName", nickName);
+    public void setUpdateUserAlias(HttpSession session, String userAlias){
+        session.removeAttribute("userAlias");
+        session.setAttribute("userAlias", userAlias);
     }
 
 
@@ -97,11 +93,10 @@ public class UserController {
 
     }
     @ApiOperation(value = "회원가입")
-    @PutMapping("/register")
+    @PostMapping("/register")
     public Object Register(
-            @ApiParam(value = "uid (UserId)", required= true) @RequestParam(value = "uid", required =true) String uid,
-            @ApiParam(value = "nickName (nickName)", required= true) @RequestParam("nickName") String nickName,
-            @ApiParam(value="Image", required = true) @RequestPart MultipartFile file,
+            @ApiParam(value = "uid", required= true) @RequestParam(value = "uid", required =true) String uid,
+            @ApiParam(value = "userAlias", required= true) @RequestParam("userAlias") String userAlias,
             @ApiIgnore HttpSession session, HttpServletResponse response) {
 
 
@@ -112,14 +107,13 @@ public class UserController {
         UserSearchInfo userSearchInfo = new UserSearchInfo();
 
         userSearchInfo.setUid(uid);
-        userSearchInfo.setNickName(nickName);
+        userSearchInfo.setUserAlias(userAlias);
         userSearchInfo.setRegisterDate(LocalDate.now());
 
         if (userService.getUid(userSearchInfo) != null) {
             return new ResponseEntity<>("이미 가입된 아이디 입니다.", HttpStatus.BAD_REQUEST);
         } else {
             try {
-
                 userService.getRegister(userSearchInfo);
                 return new ResponseEntity<>("회원가입 완료", HttpStatus.OK);
             } catch (Exception e) {
@@ -165,7 +159,7 @@ public class UserController {
 
         UserInfo userInfo = new UserInfo();
         userInfo.setUid((String) session.getAttribute("uid"));
-        userInfo.setNickName((String) session.getAttribute("nickName"));
+        userInfo.setUserAlias((String) session.getAttribute("userAlias"));
         userInfo.setUserLevel((String) session.getAttribute("userLevel"));
         userInfo.setPostId((String) session.getAttribute("postId"));
         userInfo.setPath((String) session.getAttribute("path"));
@@ -179,12 +173,12 @@ public class UserController {
     }
 
     @ApiOperation(value = "닉네임변경")
-    @PostMapping("/updateNickName")
-    public Object updateNickName(@ApiParam(value = "nickName (nickName)", required= true) @RequestParam("nickName") String nickName,
+    @PutMapping("/updateUserAlias")
+    public Object updateUserAlias(@ApiParam(value = "userAlias", required= true) @RequestParam("userAlias") String userAlias,
                                  @ApiIgnore HttpSession session){
 
         if (logger.isDebugEnabled()){
-            logger.debug("START. updateNickName");
+            logger.debug("START. updateUserAlias");
         }
 
         UserSearchInfo userSearchInfo = new UserSearchInfo();
@@ -192,11 +186,11 @@ public class UserController {
 
         try{
             userSearchInfo.setUid((String) session.getAttribute("uid"));
-            userSearchInfo.setNickName(nickName);
+            userSearchInfo.setUserAlias(userAlias);
 
-            if(userService.getUpdateNickName(userSearchInfo)){
+            if(userService.getUpdateUserAlias(userSearchInfo)){
                 userService.getLogin(userSearchInfo);
-                setUpdateNickName(session, userSearchInfo.getNickName());
+                setUpdateUserAlias(session, userSearchInfo.getUserAlias());
             }else{
                 throw new SQLException();
             }
@@ -212,6 +206,7 @@ public class UserController {
 
     @ApiOperation(value = "프로필 사진 변경")
     @PutMapping("/updateProfileImage")
+
     public Object updateProfileImage(@ApiParam(value="Image", required = true) @RequestPart MultipartFile file,
                                      @ApiIgnore HttpSession session) throws IOException {
 
@@ -219,33 +214,17 @@ public class UserController {
             logger.debug("START. updateProfileImage");
         }
 
-        // mac
-        // final String mainPath = "//Users/hantaemin/ProfileImage/"
-
         UserSearchInfo userSearchInfo = new UserSearchInfo();
 
         try{
             userSearchInfo.setUid((String) session.getAttribute("uid"));
-
-            // where MainPath
-            // System.out.println(FileSystemView.getFileSystemView().getHomeDirectory().toString());
-
-            System.out.println(FileSystemView.getFileSystemView().getHomeDirectory().toString());
-            //"/Users/hantaemin/ProfileImage/" +
-//            file.transferTo(new File( "/home/ubuntu/Profile/" + session.getAttribute("uid") + ".jpg"));
-//
-//            userSearchInfo.setPath((String) session.getAttribute(mainPath + session.getAttribute("uid") + ".jpg"));
-
-            // Sending profile image to 'nyu-img server'
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
             MultiValueMap<String, Object> body  = new LinkedMultiValueMap<>();
             body.add("file", file.getResource());
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-            String serverUrl = String.format("http://localhost:81/auth/updateProfileImage?uid=%s", session.getAttribute("uid"));
-            RestTemplate restTemplate = new RestTemplate();
-            System.out.println(restTemplate);
-            ResponseEntity<String> response = restTemplate.postForEntity(serverUrl, requestEntity, String.class);
+            String serverUrl = String.format("http://localhost:81/updateImage?id=%s&option=%s", session.getAttribute("uid"), "profile");
+            ResponseEntity<String> response = new RestTemplate().postForEntity(serverUrl, requestEntity, String.class);
 
             String resBody = response.getBody();
             String tag[] = resBody.split("\""); // Extract file uri from responseEntity

@@ -6,7 +6,7 @@ public interface UserService {
     void getLogin(UserSearchInfo userSearchInfo);
     void getRegister(UserSearchInfo userSearchInfo);
     void getSecession(String uid);
-    boolean getUpdateNickName(UserSearchInfo userSearchInfo);
+    boolean getUpdateUserAlias(UserSearchInfo userSearchInfo);
     boolean getUpdatePath(UserSearchInfo UserSearchInfo);
     String getUid(UserSearchInfo userSearchInfo);
 }

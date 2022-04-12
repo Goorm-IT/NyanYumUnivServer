@@ -2,14 +2,12 @@ package com.nyanyumserver.nyanyumserver.Controller;
 
 import com.nyanyumserver.nyanyumserver.Common.CommonConst;
 import com.nyanyumserver.nyanyumserver.Service.StoreService;
-import com.nyanyumserver.nyanyumserver.VO.PageInfo;
 import com.nyanyumserver.nyanyumserver.VO.StoreSearchInfo;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -33,8 +31,7 @@ public class StoreController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    StoreService storeService;
+    private final StoreService storeService;
 
     @GetMapping(value = "/storeList")
     @ApiOperation(value = "가게 리스트")
@@ -55,6 +52,7 @@ public class StoreController {
 
             storeSearchInfo.setStartPageNo(startPageNo - 1);
             storeSearchInfo.setEndPageNo(endPageNo);
+
             storeSearchInfo.setStoreId(storeId);
             storeSearchInfo.setCategory(category);
             storeSearchInfo.setOption(option);
