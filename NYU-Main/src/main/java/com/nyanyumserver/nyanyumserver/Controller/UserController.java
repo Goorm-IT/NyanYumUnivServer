@@ -218,17 +218,13 @@ public class UserController {
 
         try{
             userSearchInfo.setUid((String) session.getAttribute("uid"));
-
-            System.out.println(FileSystemView.getFileSystemView().getHomeDirectory().toString());
-            // Sending profile image to 'nyu-img server'
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
             MultiValueMap<String, Object> body  = new LinkedMultiValueMap<>();
             body.add("file", file.getResource());
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-            String serverUrl = String.format("http://localhost:81/auth/updateProfileImage?uid=%s", session.getAttribute("uid"));
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<String> response = restTemplate.postForEntity(serverUrl, requestEntity, String.class);
+            String serverUrl = String.format("http://localhost:81/updateImage?id=%s&option=%s", session.getAttribute("uid"), "profile");
+            ResponseEntity<String> response = new RestTemplate().postForEntity(serverUrl, requestEntity, String.class);
 
             String resBody = response.getBody();
             String tag[] = resBody.split("\""); // Extract file uri from responseEntity

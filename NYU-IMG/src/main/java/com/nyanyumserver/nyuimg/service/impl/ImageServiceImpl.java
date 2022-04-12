@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service("ImageService")
 public class ImageServiceImpl implements ImageService {
     private final AmazonS3 amazonS3;
-    private final String UID_PREFIX = "/";
+    private final String ID_PREFIX = "/";
     private final String FILE_EXTENSION_SEPARATOR = ".";
     private final List<String> FILE_EXTENSION_ALLOW =  Arrays.asList(".bmp", ".jpeg", ".jpg", ".png", ".tif", ".tiff", ".svg");
 
@@ -32,7 +32,7 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
-    private String buildFileName(String uid, String originalFileName) {
+    private String buildFileName(String id, String option, String originalFileName) {
         int fileExtensionIndex = originalFileName.lastIndexOf(FILE_EXTENSION_SEPARATOR);
         String fileExtension = originalFileName.substring(fileExtensionIndex);
         Optional<String> anyExtension = FILE_EXTENSION_ALLOW.stream()
@@ -42,31 +42,34 @@ public class ImageServiceImpl implements ImageService {
         }
         String fileName = originalFileName.substring(0, fileExtensionIndex);
 
-        return uid + UID_PREFIX + fileName + fileExtension;
+        return option + ID_PREFIX + id + ID_PREFIX + fileName + fileExtension;
     }
 
-    private String buildObjectKey(String uid) {
+    // Comparing id with bucket images
+    private String buildObjectKey(String id, String option) {
         System.out.format("Objects in S3 bucket %s:\n", bucket);
         ListObjectsV2Result result = amazonS3.listObjectsV2(bucket);
         List<S3ObjectSummary> objects = result.getObjectSummaries(); // Objects List
         for (S3ObjectSummary os : objects) {
             String object = os.getKey();
-            int uidPrefixIndex = object.indexOf(UID_PREFIX);
-            String uidCon = object.substring(0, uidPrefixIndex); // Extract uid part
-            if (uidCon.equals(uid)) {
+            String imageSep[] = object.split(ID_PREFIX);
+            if (imageSep[0].equals(option) && imageSep[1].equals(id)) {
                 return object;
             }
         }
         return null;
     }
 
-    public String uploadImage(String uid, MultipartFile multipartFile) {
+
+
+
+    public String uploadImage(String id, String option, MultipartFile multipartFile) {
         validateFileExists(multipartFile);
 
-        String fileName = buildFileName(uid, multipartFile.getOriginalFilename());
+        String fileName = buildFileName(id, option, multipartFile.getOriginalFilename());
 
-        if (buildObjectKey(uid) != null){ // file exist -> delete
-            deleteImage(uid);
+        if (buildObjectKey(id, option) != null){ // file exist -> delete
+            deleteImage(id, option);
         }
 
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -75,7 +78,7 @@ public class ImageServiceImpl implements ImageService {
         try (InputStream inputStream = multipartFile.getInputStream()) {
             amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
-            return downloadImage(uid);
+            return downloadImage(id, option);
 
         } catch (IOException e) { // converting file error
             e.printStackTrace();
@@ -84,19 +87,19 @@ public class ImageServiceImpl implements ImageService {
     }
 
 
-    public String downloadImage(String uid) {
-            String resourcePath = amazonS3.getUrl(bucket, buildObjectKey(uid)).toString();
-            if (buildObjectKey(uid) == null) {
-                throw new NullPointerException(String.format("Not Found Image (uid : %s)", uid));
+    public String downloadImage(String id, String option) {
+            String resourcePath = amazonS3.getUrl(bucket, buildObjectKey(id, option)).toString();
+            if (buildObjectKey(id, option) == null) {
+                throw new NullPointerException(String.format("Not Found Image in %s (id : %s)", option, id));
             }
             System.out.println("imageUrl : " + resourcePath);
             return resourcePath;
     }
 
-    public void deleteImage(String uid) {
-        String deleteObjectKey = buildObjectKey(uid);
+    public void deleteImage(String id, String option) {
+        String deleteObjectKey = buildObjectKey(id, option);
         if (deleteObjectKey == null) {
-            throw new NullPointerException(String.format("Delete Request Rejected For Not Found Image(uid : %s)", uid));
+            throw new NullPointerException(String.format("Delete Request Rejected For Not Found Image in %s (id : %s)", option, id));
         }
         amazonS3.deleteObject(bucket, deleteObjectKey);
     }
