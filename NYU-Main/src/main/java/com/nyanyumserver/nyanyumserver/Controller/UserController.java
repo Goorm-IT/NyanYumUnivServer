@@ -36,10 +36,6 @@ public class UserController {
 
     private final UserService userService;
 
-    public String getSessionUid(HttpSession session){
-        return (String) session.getAttribute("uid");
-    }
-
     public void setUserSession(HttpSession session, List<UserInfo> getUserInfos){
         session.setAttribute("uid", getUserInfos.get(0).getUid());
         session.setAttribute("userAlias", getUserInfos.get(0).getUserAlias());
