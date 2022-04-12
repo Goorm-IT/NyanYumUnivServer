@@ -16,4 +16,5 @@ public class StoreInfo extends MenuInfo implements Serializable {
     private String commentId;
     private String category;
     private MenuInfo menuInfo;
+    private String path;
 }

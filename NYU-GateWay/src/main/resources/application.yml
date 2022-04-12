@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: NYU-GateWay
+
+  cloud:
+    gateway:
+      routes:
+        - id: NYU-MAIN
+          uri: lb://NYU-MAIN
+          predicates:
+            Path=/**
+        - id: NYU-IMG
+          uri: lb://NYU-IMG
+          predicates:
+            Path=/**
+management:
+  endpoint:
+    web:
+      exposure:
+        include:
+          -
+
+eureka:
+  instance:
+    appname: NYU-GateWay
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8080/eureka
+
+server:
+  port: 8081

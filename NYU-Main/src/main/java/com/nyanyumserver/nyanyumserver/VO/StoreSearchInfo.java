@@ -1,13 +1,15 @@
 package com.nyanyumserver.nyanyumserver.VO;
 
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 
 public class StoreSearchInfo extends PageInfo implements Serializable {
     private String storeId;
@@ -15,6 +17,7 @@ public class StoreSearchInfo extends PageInfo implements Serializable {
     private  float score;
     private String commentId;
     private String category;
+    private String path;
 
     private MenuInfo menuInfo;
 

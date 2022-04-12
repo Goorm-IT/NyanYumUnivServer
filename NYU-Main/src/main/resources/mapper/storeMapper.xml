@@ -35,8 +35,7 @@
     <select id="getStoreInfo" resultMap="StoreInfo">
         SELECT *
         FROM store s
-        JOIN menu m
-        ON s.storeId = #{storeId};
+        where storeId = #{storeId}
     </select>
 
     <select id="getSearchStore" resultMap="StoreInfo">
