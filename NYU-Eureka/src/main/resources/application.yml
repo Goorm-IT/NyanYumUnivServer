@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: EurekaSever
+
+server:
+  port: 8080
+
+eureka:
+  instance:
+    appname: NYU-Server
+  client:
+    fetch-registry: false
+    register-with-eureka: false
