@@ -13,12 +13,8 @@ spring:
           uri: lb://NYU-IMG
           predicates:
             Path=/**
-management:
-  endpoint:
-    web:
-      exposure:
-        include:
-          -
+    compatibility-verifier:
+      enabled: false
 
 eureka:
   instance:
@@ -27,7 +23,7 @@ eureka:
     fetch-registry: true
     register-with-eureka: true
     service-url:
-      defaultZone: http://localhost:8080/eureka
+      defaultZone: http://localhost:80/eureka
 
 server:
-  port: 8081
+  port: 82
