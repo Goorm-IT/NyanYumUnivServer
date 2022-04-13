@@ -34,6 +34,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+            <version>2.6.6</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.experimental</groupId>
@@ -63,12 +64,6 @@
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -153,7 +148,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>${native-buildtools.version}</version>
+                        <version>0.9.10</version>
                         <extensions>true</extensions>
                         <executions>
                             <execution>
