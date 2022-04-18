@@ -1,6 +1,7 @@
 package com.nyanyumserver.nyanyumserver.Controller;
 
 import com.nyanyumserver.nyanyumserver.Service.UserService;
+import com.nyanyumserver.nyanyumserver.Service.ImageService;
 import com.nyanyumserver.nyanyumserver.VO.UserInfo;
 import com.nyanyumserver.nyanyumserver.VO.UserSearchInfo;
 import io.swagger.annotations.ApiOperation;
@@ -9,17 +10,13 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.filechooser.FileSystemView;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -35,6 +32,7 @@ public class UserController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final UserService userService;
+    private final ImageService imageService;
 
     public String getSessionUid(HttpSession session){
         return (String) session.getAttribute("uid");
@@ -217,19 +215,10 @@ public class UserController {
         UserSearchInfo userSearchInfo = new UserSearchInfo();
 
         try{
-            userSearchInfo.setUid((String) session.getAttribute("uid"));
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-            MultiValueMap<String, Object> body  = new LinkedMultiValueMap<>();
-            body.add("file", file.getResource());
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-            String serverUrl = String.format("http://localhost:81/updateImage?id=%s&option=%s", session.getAttribute("uid"), "profile");
-            ResponseEntity<String> response = new RestTemplate().postForEntity(serverUrl, requestEntity, String.class);
-
-            String resBody = response.getBody();
-            String tag[] = resBody.split("\""); // Extract file uri from responseEntity
-            userSearchInfo.setPath(tag[3]);
-
+            Object uid = session.getAttribute("uid");
+            userSearchInfo.setUid((String) uid);
+            String imgPath = imageService.updateImage(file, (String) uid, "profile");
+            userSearchInfo.setPath(imgPath);
 
             if(userService.getUpdatePath(userSearchInfo)){
                 setUpdatePath(session, userSearchInfo.getPath());
@@ -242,6 +231,37 @@ public class UserController {
         } catch (Exception e){
 
             return new ResponseEntity<>("변경 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @ApiOperation(value = "프로필 사진 삭제")
+    @DeleteMapping("/deleteProfileImage")
+
+    public Object deleteProfileImage(@ApiIgnore HttpSession session) throws IOException {
+
+        if (logger.isDebugEnabled()){
+            logger.debug("START. deleteProfileImage");
+        }
+
+        UserSearchInfo userSearchInfo = new UserSearchInfo();
+
+        try{
+            Object uid = session.getAttribute("uid");
+            userSearchInfo.setUid((String) uid);
+            imageService.deleteImage((String) uid, "profile");
+            userSearchInfo.setPath(null);
+
+            if(userService.getUpdatePath(userSearchInfo)){
+                setUpdatePath(session, userSearchInfo.getPath());
+            }else{
+                throw new SQLException();
+            }
+
+            return new ResponseEntity<>("삭제 완료", HttpStatus.OK);
+
+        } catch (Exception e){
+
+            return new ResponseEntity<>("삭제 실패", HttpStatus.BAD_REQUEST);
         }
     }
 }

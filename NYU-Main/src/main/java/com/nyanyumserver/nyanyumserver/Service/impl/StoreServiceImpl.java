@@ -1,7 +1,9 @@
 package com.nyanyumserver.nyanyumserver.Service.impl;
 
 import com.nyanyumserver.nyanyumserver.Service.StoreService;
+import com.nyanyumserver.nyanyumserver.VO.StoreInfo;
 import com.nyanyumserver.nyanyumserver.VO.StoreSearchInfo;
+import com.nyanyumserver.nyanyumserver.VO.UserSearchInfo;
 import com.nyanyumserver.nyanyumserver.mapper.StoreMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,24 @@ public class StoreServiceImpl implements StoreService {
         }
     }
 
+    @Override
+    public void getRegister(StoreSearchInfo storeSearchInfo){
+        try{
+            storeSearchInfo.addStoreInfos(storeMapper.getRegister(storeSearchInfo));
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
 
+    @Override
+    public String getStoreId(StoreSearchInfo storeSearchInfo){
+
+        return storeMapper.getStoreId(storeSearchInfo);
+    }
+
+    @Override
+    public String getAddress(StoreSearchInfo storeSearchInfo){
+        return storeMapper.getAddress(storeSearchInfo);
+    }
 
 }

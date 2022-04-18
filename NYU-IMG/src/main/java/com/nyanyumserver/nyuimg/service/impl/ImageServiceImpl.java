@@ -27,7 +27,7 @@ public class ImageServiceImpl implements ImageService {
     private String bucket;
 
     private void validateFileExists(MultipartFile multipartFile) {
-        if (multipartFile.isEmpty()) {
+        if (multipartFile == null) {
             throw new IllegalArgumentException("The upload file is empty"); // Image Not Exist
         }
     }
@@ -53,7 +53,7 @@ public class ImageServiceImpl implements ImageService {
         for (S3ObjectSummary os : objects) {
             String object = os.getKey();
             String imageSep[] = object.split(ID_PREFIX);
-            if (imageSep[0].equals(option) && imageSep[1].equals(id)) {
+            if (imageSep.length > 1 && imageSep[0].equals(option) && imageSep[1].equals(id)) {
                 return object;
             }
         }
