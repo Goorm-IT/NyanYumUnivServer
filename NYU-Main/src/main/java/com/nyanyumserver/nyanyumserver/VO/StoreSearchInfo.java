@@ -15,6 +15,7 @@ public class StoreSearchInfo extends PageInfo implements Serializable {
     private  float score;
     private String commentId;
     private String category;
+    private String path;
 
     private MenuInfo menuInfo;
 
