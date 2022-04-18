@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.sql.SQLException;
 
 
@@ -17,6 +18,7 @@ public class UserServiceImpl implements UserService{
     UserMapper userMapper;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
+
 
     public void getLogin(UserSearchInfo userSearchInfo){
         try{
