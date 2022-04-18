@@ -1,6 +1,7 @@
 package com.nyanyumserver.nyuimg.controller;
 
 import com.nyanyumserver.nyuimg.global.status.StatusCode;
+import com.nyanyumserver.nyuimg.global.status.StatusCode;
 import com.nyanyumserver.nyuimg.global.status.StatusResponse;
 import io.swagger.annotations.*;
 import lombok.*;
@@ -14,7 +15,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
 @EnableSwagger2
 public class ImageController {
     private final ImageService imageService;
@@ -23,11 +23,8 @@ public class ImageController {
     /**
      * 이미지 변경하기
      *
-     * body {
-     *     "uid" : "uid",
-     *     "file" : "file"
-     * }
-     * @param uid
+     * @param id
+     * @param option
      * @param multipartFile
      */
     @ApiResponses({
@@ -36,13 +33,14 @@ public class ImageController {
             @ApiResponse(code=416, message="파일 용량 초과 (용량 제한 : 3MB)"),
             @ApiResponse(code=417, message="사용자 전송 파일 없음")
     })
-    @ApiImplicitParam(name = "uid", value = "사용자 uid", required = true, dataType = "String")
+    @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "String")
     @ApiOperation(value = "이미지 변경하기")
-    @PostMapping("/updateProfileImage")
+    @PostMapping("/updateImage")
     public ResponseEntity<StatusResponse> uploadImage(
-            @RequestParam("uid") String uid,
+            @RequestParam("id") String id,
+            @RequestParam("option") String option,
             @RequestPart(value = "file") MultipartFile multipartFile) {
-            String resourcePath = imageService.uploadImage(uid, multipartFile);
+            String resourcePath = imageService.uploadImage(id, option, multipartFile);
             final StatusResponse response = new StatusResponse(StatusCode.OK, resourcePath);
             return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -59,10 +57,10 @@ public class ImageController {
     })
     @ApiImplicitParam(name = "uid", value = "사용자 uid", required = true, dataType = "String")
     @ApiOperation(value = "이미지 가져오기")
-    @GetMapping("/downloadProfileImage")
+    @GetMapping("/downloadImage")
     public ResponseEntity<StatusResponse> downloadImage(
             @RequestParam("uid") String uid) {
-            String resourcePath = imageService.downloadImage(uid);
+            String resourcePath = imageService.downloadImage(uid, "profile");
             final StatusResponse response = new StatusResponse(StatusCode.OK, resourcePath);
             return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -70,19 +68,21 @@ public class ImageController {
     /**
      * 이미지 삭제하기
      *
-     * @param uid
+     * @param id
+     * @param option
      */
     @ApiResponses({
             @ApiResponse(code=200, message="이미지 삭제 완료"),
             @ApiResponse(code=204, message="S3 버킷내에 해당 uid 사용자 이미지 없음")
     })
-    @ApiImplicitParam(name = "uid", value = "사용자 uid", required = true, dataType = "String")
+    @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "String")
     @ApiOperation(value = "이미지 삭제하기")
-    @DeleteMapping("/deleteProfileImage")
+    @DeleteMapping("/deleteImage")
     public ResponseEntity<StatusResponse> deleteImage(
-            @RequestParam("uid") String uid) {
-            imageService.deleteImage(uid);
-            final StatusResponse response = new StatusResponse(StatusCode.OK, uid);
+            @RequestParam("id") String id,
+            @RequestParam("option") String option){
+            imageService.deleteImage(id, option);
+            final StatusResponse response = new StatusResponse(StatusCode.OK, id);
             return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
