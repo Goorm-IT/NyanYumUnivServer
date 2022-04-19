@@ -25,7 +25,7 @@ public class SwaggerConfig  extends WebMvcConfigurationSupport {
                 .groupName("NYU-IMG")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.nyanyumserver.nyuimg"))
-                .paths(PathSelectors.any())
+                .paths(PathSelectors.ant("/NYU/**"))
                 .build();
     }
 
@@ -41,7 +41,7 @@ public class SwaggerConfig  extends WebMvcConfigurationSupport {
         produces.add("application/json;charset=UTF-8");
         return produces;
     }
-    
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/swagger-ui/index.html").addResourceLocations("classpath:/META-INF/resources/");

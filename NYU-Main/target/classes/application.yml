@@ -41,3 +41,6 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://localhost:80/eureka
+springfox:
+  documentation:
+    auto-startup: true
