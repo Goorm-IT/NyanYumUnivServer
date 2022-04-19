@@ -67,5 +67,22 @@
         ORDER BY monthlyVote DESC
         LIMIT 5;
     </select>
+    
+    <select id="getRegister" parameterType="com.nyanyumserver.nyanyumserver.VO.StoreInfo" resultMap="StoreInfo">
+        INSERT INTO store (storeId, address, category, path)
+        VALUES (#{storeId}, #{address}, #{category}, #{path})
+    </select>
+
+    <select id="getStoreId" parameterType="String" resultType="String">
+        SELECT storeId
+        FROM store
+        WHERE storeId = #{storeId}
+    </select>
+
+    <select id="getAddress" parameterType="String" resultType="String">
+        SELECT address
+        FROM store
+        WHERE address = #{address}
+    </select>
 
 </mapper>

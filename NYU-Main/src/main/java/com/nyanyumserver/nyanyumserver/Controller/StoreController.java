@@ -1,6 +1,7 @@
 package com.nyanyumserver.nyanyumserver.Controller;
 
 import com.nyanyumserver.nyanyumserver.Common.CommonConst;
+import com.nyanyumserver.nyanyumserver.Service.ImageService;
 import com.nyanyumserver.nyanyumserver.Service.StoreService;
 import com.nyanyumserver.nyanyumserver.VO.StoreSearchInfo;
 import io.swagger.annotations.ApiOperation;
@@ -11,12 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +34,7 @@ public class StoreController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final StoreService storeService;
+    private final ImageService imageService;
 
     @GetMapping(value = "/storeList")
     @ApiOperation(value = "가게 리스트")
@@ -80,22 +83,41 @@ public class StoreController {
         }
     }
 
-    @PutMapping("/addStore")
+    @PostMapping("/addStore")
     @ApiOperation(value= "가게 추가")
-    public Object addStore(){
+    public Object addStore(
+            @ApiParam(value = "storeId", required= true) @RequestParam(value = "storeId", required =true) String storeId,
+            @ApiParam(value = "address", required= true) @RequestParam(value = "address", required=true) String address,
+            @ApiParam(value = "category", required= true) @RequestParam(value = "category", required=true) String category,
+            @ApiParam(value = "file", required= false) @RequestPart(value = "file", required=false) MultipartFile file,
+            @ApiIgnore HttpSession session, HttpServletResponse response) {
 
         if (logger.isDebugEnabled()) {
             logger.debug("START. addStore");
         }
-        try{
+        StoreSearchInfo storeSearchInfo = new StoreSearchInfo();
 
-            logger.debug("END. addStore");
-            return null;
-        }catch (Exception e){
-            if (logger.isDebugEnabled()) {
-                logger.error("ERROR. addStore");
-            }
+        storeSearchInfo.setStoreId(storeId);
+        storeSearchInfo.setAddress(address);
+        storeSearchInfo.setCategory(category);
+
+        if (storeService.getStoreId(storeSearchInfo) != null || storeService.getAddress(storeSearchInfo) != null) {
             return new ResponseEntity<>(CommonConst.STORE_ERROR_OVERLAP, HttpStatus.BAD_REQUEST);
+        } else {
+            try {
+                if(file != null){
+                String imgPath = imageService.updateImage(file, storeId, "store");
+                storeSearchInfo.setPath(imgPath);
+                }
+                storeService.getRegister(storeSearchInfo);
+                logger.debug("END. addStore");
+                return null;
+            } catch (Exception e) {
+                if (logger.isDebugEnabled()) {
+                    logger.error("ERROR. addStore");
+                }
+                return new ResponseEntity<>("가게 추가에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+            }
         }
     }
 
