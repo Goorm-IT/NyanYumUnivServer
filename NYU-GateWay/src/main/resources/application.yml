@@ -1,7 +1,6 @@
 spring:
   application:
     name: NYU-GateWay
-
   cloud:
     gateway:
       routes:
@@ -9,10 +8,13 @@ spring:
           uri: lb://NYU-MAIN
           predicates:
             Path=/**
+
+
         - id: NYU-IMG
           uri: lb://NYU-IMG
           predicates:
             Path=/**
+
     compatibility-verifier:
       enabled: false
 
@@ -24,6 +26,10 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://localhost:80/eureka
+
+springfox:
+  documentation:
+    auto-startup: true
 
 server:
   port: 82
