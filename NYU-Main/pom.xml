@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.NyanYumServer</groupId>
-    <artifactId>NyanYumServer</artifactId>
+    <artifactId>NYU-MAIN</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>NyanYumServer</name>
-    <description>NyanYumServer</description>
+    <name>NYU-MAIN</name>
+    <description>NYU-MAIN</description>
     <!--배포 형식 지정-->
     <packaging>jar</packaging>
     <properties>

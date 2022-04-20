@@ -21,7 +21,7 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    @GetMapping("/allUser")
+    @GetMapping("/admin/users")
     @ApiOperation(value = "전체 사용자 조회")
     public Object getAllUser(){
 

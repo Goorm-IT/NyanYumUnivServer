@@ -12,7 +12,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class MainController {
 
-    @GetMapping("/mainBanner")
+    @GetMapping("/main/banner")
     @ApiOperation(value = "메인배너")
     public void getMainBanner(){
 

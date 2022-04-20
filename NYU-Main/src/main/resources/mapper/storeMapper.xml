@@ -9,7 +9,7 @@
     </resultMap>
     <select id="getStoreList" resultMap="StoreInfo">
         SELECT *
-        FROM store s
+        FROM v2_store s
             <where>
                 <if test="category != null">
                     s.category = #{category}
@@ -34,14 +34,14 @@
 
     <select id="getStoreInfo" resultMap="StoreInfo">
         SELECT *
-        FROM store s
+        FROM v2_store s
         JOIN menu m
         ON s.storeId = #{storeId};
     </select>
 
     <select id="getSearchStore" resultMap="StoreInfo">
         SELECT *
-        FROM store
+        FROM v2_store
         <where>
             storeId LIKE CONCAT ('%', #{storeId}, '%');
         </where>
@@ -63,25 +63,25 @@
 
     <select id="getMonthlyStore" resultMap="StoreInfo">
         SELECT *
-        FROM store
+        FROM v2_store
         ORDER BY monthlyVote DESC
         LIMIT 5;
     </select>
-    
+
     <select id="getRegister" parameterType="com.nyanyumserver.nyanyumserver.VO.StoreInfo" resultMap="StoreInfo">
-        INSERT INTO store (storeId, address, category, path)
+        INSERT INTO v2_store (storeId, address, category, path)
         VALUES (#{storeId}, #{address}, #{category}, #{path})
     </select>
 
     <select id="getStoreId" parameterType="String" resultType="String">
-        SELECT storeId
+        SELECT v2_store
         FROM store
         WHERE storeId = #{storeId}
     </select>
 
     <select id="getAddress" parameterType="String" resultType="String">
         SELECT address
-        FROM store
+        FROM v2_store
         WHERE address = #{address}
     </select>
 
