@@ -29,6 +29,7 @@ import java.util.Map;
 @RestController
 @EnableSwagger2
 @RequiredArgsConstructor
+@RequestMapping(value = "/nyu")
 public class StoreController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -36,7 +37,7 @@ public class StoreController {
     private final StoreService storeService;
     private final ImageService imageService;
 
-    @GetMapping(value = "/storeList")
+    @GetMapping(value = "/stores")
     @ApiOperation(value = "가게 리스트")
     public Object getStoreList(
             @ApiParam(value = "startPageNo", required = true) @RequestParam(value = "startPageNo", required = true) int startPageNo,
@@ -58,7 +59,7 @@ public class StoreController {
 
             storeSearchInfo.setStoreId(storeId);
             storeSearchInfo.setCategory(category);
-            storeSearchInfo.setOption(option);
+            storeSearchInfo.setOrder(option);
 
             storeService.getStoreList(storeSearchInfo);
 
@@ -83,7 +84,7 @@ public class StoreController {
         }
     }
 
-    @PostMapping("/addStore")
+    @PostMapping("/store")
     @ApiOperation(value= "가게 추가")
     public Object addStore(
             @ApiParam(value = "storeId", required= true) @RequestParam(value = "storeId", required =true) String storeId,
@@ -121,10 +122,10 @@ public class StoreController {
         }
     }
 
-    @GetMapping("/storeInfo")
+    @GetMapping("/store/{storeId}")
     @ApiOperation(value = "가게 정보")
     public Object getStoreInfo(
-            @ApiParam(value = "가게 ID", required = true) @RequestParam(value = "storeId", required = true) String storeId
+            @ApiParam(value = "가게 ID", required = true) @PathVariable(value = "storeId", required = true) String storeId
     ){
         try{
             if (logger.isDebugEnabled()) {
@@ -144,7 +145,7 @@ public class StoreController {
         }
     }
 
-    @GetMapping("/monthlyStore")
+    @GetMapping("/store/monthly")
     @ApiOperation(value = "이달의 가게")
     public Object getMonthlyStore(){
         try{
@@ -170,7 +171,7 @@ public class StoreController {
 
     }
 
-    @GetMapping("/searchStore")
+    @GetMapping("/store/search")
     @ApiOperation(value= "가게 검색")
     public Object getSearchStore(
             @ApiParam(value = "가게ID", required = true) @RequestParam(value = "storeId", required = true) String storeId,
@@ -183,7 +184,7 @@ public class StoreController {
             StoreSearchInfo storeSearchInfo = new StoreSearchInfo();
 
             storeSearchInfo.setStoreId(storeId);
-            storeSearchInfo.setOption(option);
+            storeSearchInfo.setOrder(option);
 
             storeService.getSearchStore(storeSearchInfo);
 

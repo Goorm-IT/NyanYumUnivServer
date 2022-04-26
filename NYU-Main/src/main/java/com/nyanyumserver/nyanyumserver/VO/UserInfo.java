@@ -9,8 +9,6 @@ public class UserInfo {
     private String uid;
     private String userAlias;
     private String userLevel;
-    private String postId;
-    private String path;
-    private String profileImg;
+    private String imagePath;
     private LocalDate registerDate;
 }

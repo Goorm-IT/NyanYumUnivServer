@@ -1,7 +1,6 @@
 package com.nyanyumserver.nyuimg.controller;
 
 import com.nyanyumserver.nyuimg.global.status.StatusCode;
-import com.nyanyumserver.nyuimg.global.status.StatusCode;
 import com.nyanyumserver.nyuimg.global.status.StatusResponse;
 import io.swagger.annotations.*;
 import lombok.*;
@@ -16,6 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @RequiredArgsConstructor
 @RestController
 @EnableSwagger2
+@RequestMapping(value = "/nyu/img")
 public class ImageController {
     private final ImageService imageService;
 
@@ -35,7 +35,7 @@ public class ImageController {
     })
     @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "String")
     @ApiOperation(value = "이미지 변경하기")
-    @PostMapping("/updateImage")
+    @PostMapping("")
     public ResponseEntity<StatusResponse> uploadImage(
             @RequestParam("id") String id,
             @RequestParam("option") String option,
@@ -57,7 +57,7 @@ public class ImageController {
     })
     @ApiImplicitParam(name = "uid", value = "사용자 uid", required = true, dataType = "String")
     @ApiOperation(value = "이미지 가져오기")
-    @GetMapping("/downloadImage")
+    @GetMapping("")
     public ResponseEntity<StatusResponse> downloadImage(
             @RequestParam("uid") String uid) {
             String resourcePath = imageService.downloadImage(uid, "profile");
@@ -77,7 +77,7 @@ public class ImageController {
     })
     @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "String")
     @ApiOperation(value = "이미지 삭제하기")
-    @DeleteMapping("/deleteImage")
+    @DeleteMapping("")
     public ResponseEntity<StatusResponse> deleteImage(
             @RequestParam("id") String id,
             @RequestParam("option") String option){
