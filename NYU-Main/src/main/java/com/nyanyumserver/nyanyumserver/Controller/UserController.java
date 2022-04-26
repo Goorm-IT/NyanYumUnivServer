@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/nyu/user")
 @RequiredArgsConstructor
 @EnableSwagger2
 public class UserController {
@@ -58,7 +58,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/login")
+    @GetMapping("/session")
     @ApiOperation(value = "로그인")
     public Object login(
             @ApiParam(value = "uid (UserId)", required= true) @RequestParam(value = "uid", required =true) String uid ,
@@ -91,6 +91,19 @@ public class UserController {
         }
 
     }
+
+    @ApiOperation(value = "로그아웃")
+    @DeleteMapping("/session")
+    public ResponseEntity<?> logOut(@ApiIgnore HttpSession session){
+
+        if (logger.isDebugEnabled()){
+            logger.debug("START. logout");
+        }
+
+        session.invalidate();
+        return new ResponseEntity<>("로그아웃", HttpStatus.OK);
+    }
+
     @ApiOperation(value = "회원가입")
     @PostMapping("")
     public Object Register(
@@ -121,18 +134,6 @@ public class UserController {
 
         }
 
-    }
-
-    @ApiOperation(value = "로그아웃")
-    @GetMapping("/logout")
-    public ResponseEntity<?> logOut(@ApiIgnore HttpSession session){
-
-        if (logger.isDebugEnabled()){
-            logger.debug("START. logout");
-        }
-
-        session.invalidate();
-        return new ResponseEntity<>("로그아웃", HttpStatus.OK);
     }
 
     @ApiOperation(value = "회원탈퇴")

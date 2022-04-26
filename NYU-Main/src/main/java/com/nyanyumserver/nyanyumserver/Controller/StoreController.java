@@ -29,6 +29,7 @@ import java.util.Map;
 @RestController
 @EnableSwagger2
 @RequiredArgsConstructor
+@RequestMapping(value = "/nyu")
 public class StoreController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
