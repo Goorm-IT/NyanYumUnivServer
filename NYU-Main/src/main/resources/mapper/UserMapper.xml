@@ -38,7 +38,7 @@
 
     <update id="getUpdatePath" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo">
         UPDATE v2_user
-        SET imagePath = #{path}
+        SET imagePath = #{imagePath}
         WHERE uId = #{uid}
     </update>
 
