@@ -80,7 +80,7 @@ public class StoreController {
 
         }catch (Exception e){
             logger.error("ERROR, getStoreList");
-            return new ResponseEntity<>(CommonConst.STORE_ERROR_BAD_REQUEST, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(CommonConst.BAD_REQUEST, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -103,7 +103,7 @@ public class StoreController {
         storeSearchInfo.setCategory(category);
 
         if (storeService.getStoreId(storeSearchInfo) != null || storeService.getAddress(storeSearchInfo) != null) {
-            return new ResponseEntity<>(CommonConst.STORE_ERROR_OVERLAP, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(CommonConst.UNPROCESSABLE_ENTITY, HttpStatus.UNPROCESSABLE_ENTITY);
         } else {
             try {
                 if(file != null){
@@ -141,7 +141,7 @@ public class StoreController {
 
             return new ResponseEntity<>(storeSearchInfo.getStoreInfos(), HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>(CommonConst.STORE_ERROR_NO, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(CommonConst.UNPROCESSABLE_ENTITY, HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
@@ -166,7 +166,7 @@ public class StoreController {
 
             return new ResponseEntity<>(map, HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>(CommonConst.STORE_ERROR_BAD_REQUEST, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(CommonConst.BAD_REQUEST, HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -192,7 +192,7 @@ public class StoreController {
 
             return new ResponseEntity<>(storeSearchInfo.getStoreInfos(), HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>(CommonConst.STORE_ERROR_UNREGISTERED, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(CommonConst.UNPROCESSABLE_ENTITY, HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 }
