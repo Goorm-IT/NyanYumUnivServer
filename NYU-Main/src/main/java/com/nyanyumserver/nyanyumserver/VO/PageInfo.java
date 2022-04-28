@@ -12,7 +12,7 @@ public class PageInfo implements Serializable {
     private int startPageNo;
     private int endPageNo;
     private int startIndex;
-    private String option;
+    private String order;
 
     public PageInfo(){
     }
@@ -21,7 +21,7 @@ public class PageInfo implements Serializable {
         this.startPageNo = startPageNo;
         this.endPageNo = endPageNo;
         this.startIndex = startIndex;
-        this.option = option;
+        this.order = option;
 
     }
 

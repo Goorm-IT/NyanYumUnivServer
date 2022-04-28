@@ -15,10 +15,8 @@ public class UserSearchInfo {
     private String uid;
     private String userAlias;
     private String userLevel;
-    private String postId;
-    private String path;
+    private String imagePath;
     private LocalDate registerDate;
-    private MultipartFile profileImg;
     private List<UserInfo> userInfos = new ArrayList<>();
     public void addUserInfos(List<UserInfo> userInfos) {
         this.userInfos.addAll(userInfos);

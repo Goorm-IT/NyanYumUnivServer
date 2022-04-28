@@ -5,10 +5,14 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class UserInfo {
-    private String uid;
+public class ReviewInfo {
+    private int reviewId;
     private String userAlias;
-    private String userLevel;
+    private int storeId;
+    private int menuId;
+    private float score;
+    private String content;
     private String imagePath;
+    private String propose;
     private LocalDate registerDate;
 }

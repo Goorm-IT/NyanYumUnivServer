@@ -2,40 +2,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nyanyumserver.nyanyumserver.mapper.UserMapper">
     <resultMap type="com.nyanyumserver.nyanyumserver.VO.UserInfo" id="UserInfo">
-        <result column="uid" property="uid"/>
+        <result column="uId" property="uid"/>
         <result column="userAlias" property="userAlias" />
+        <result column="userLevel" property="userLevel"/>
+        <result column="imagePath" property="imagePath"/>
+        <result column="registerDate" property="registerDate"/>
+
     </resultMap>
     <select id="getUid" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo" resultType="String">
-        SELECT uid
-        FROM user
-        WHERE uid = #{uid}
+        SELECT uId
+        FROM v2_user
+        WHERE uId = #{uid}
     </select>
     <select id="getLogin" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo" resultMap="UserInfo">
         SELECT *
-        FROM user
-        where uid = #{uid}
+        FROM v2_user
+        where uId = #{uid}
     </select>
 
     <select id="getRegister" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo" resultMap="UserInfo">
-        INSERT INTO user (uid, useralias, registerDate)
+        INSERT INTO v2_user (uId, userAlias, registerDate)
         VALUES (#{uid}, #{userAlias}, #{registerDate})
     </select>
 
     <select id="getSecession" parameterType="java.lang.String">
-        DELETE FROM user
-        WHERE uid = #{uid}
+        DELETE FROM v2_user
+        WHERE uId = #{uid}
     </select>
 
     <update id="getUpdateUserAlias" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo">
-        UPDATE user
-        SET useralias = #{userAlias}
-        WHERE uid = #{uid}
+        UPDATE v2_user
+        SET userAlias = #{userAlias}
+        WHERE uId = #{uid}
     </update>
 
     <update id="getUpdatePath" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo">
-        UPDATE user
-        SET path = #{path}
-        WHERE uid = #{uid}
+        UPDATE v2_user
+        SET imagePath = #{imagePath}
+        WHERE uId = #{uid}
     </update>
 
 </mapper>

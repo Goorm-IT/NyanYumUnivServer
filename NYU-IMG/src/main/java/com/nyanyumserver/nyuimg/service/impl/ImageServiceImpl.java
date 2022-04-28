@@ -1,3 +1,5 @@
+
+
 package com.nyanyumserver.nyuimg.service.impl;
 
 import com.amazonaws.services.s3.AmazonS3;
@@ -60,9 +62,6 @@ public class ImageServiceImpl implements ImageService {
         return null;
     }
 
-
-
-
     public String uploadImage(String id, String option, MultipartFile multipartFile) {
         validateFileExists(multipartFile);
 
@@ -86,14 +85,13 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
-
     public String downloadImage(String id, String option) {
-            String resourcePath = amazonS3.getUrl(bucket, buildObjectKey(id, option)).toString();
-            if (buildObjectKey(id, option) == null) {
-                throw new NullPointerException(String.format("Not Found Image in %s (id : %s)", option, id));
-            }
-            System.out.println("imageUrl : " + resourcePath);
-            return resourcePath;
+        String resourcePath = amazonS3.getUrl(bucket, buildObjectKey(id, option)).toString();
+        if (buildObjectKey(id, option) == null) {
+            throw new NullPointerException(String.format("Not Found Image in %s (id : %s)", option, id));
+        }
+        System.out.println("imageUrl : " + resourcePath);
+        return resourcePath;
     }
 
     public void deleteImage(String id, String option) {
