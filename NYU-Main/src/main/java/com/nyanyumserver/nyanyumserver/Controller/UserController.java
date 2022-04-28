@@ -222,7 +222,6 @@ public class UserController {
             String imgPath = imageService.updateImage(file, (String) uid, "profile");
             userSearchInfo.setImagePath(imgPath);
 
-            System.out.println(userSearchInfo.getUserInfos());
             if(userService.getUpdatePath(userSearchInfo)){
                 setUpdatePath(session, userSearchInfo.getImagePath());
             }else{

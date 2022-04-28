@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-@EnableAsync
 @RestController
 @EnableSwagger2
 @RequiredArgsConstructor

@@ -4,7 +4,9 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
+@ToString
 public class ReviewInfo {
     private int reviewId;
     private String userAlias;
