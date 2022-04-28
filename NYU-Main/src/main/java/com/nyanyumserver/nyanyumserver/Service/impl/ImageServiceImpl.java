@@ -27,7 +27,7 @@ public class ImageServiceImpl implements ImageService {
     public String updateImage(MultipartFile file, String id, String option){
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         body.add("file", file.getResource());
-        String serverUrl = String.format("http://%s:%s/updateImage?id=%s&option=%s", imgHost, imgPort, id, option);
+        String serverUrl = String.format("http://%s:%s/nyu/img?id=%s&option=%s", imgHost, imgPort, id, option);
         ResponseEntity<String> response = new RestTemplate().postForEntity(serverUrl, requestEntity, String.class);
         String resBody = response.getBody();
         String tag[] = resBody.split("\""); // Extract file uri from responseEntity
@@ -35,7 +35,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     public void deleteImage(String id, String option){
-        String serverUrl = String.format("http://%s:%s/deleteImage?id=%s&option=%s", imgHost, imgPort, id, option);
+        String serverUrl = String.format("http://%s:%s/nyu/img?id=%s&option=%s", imgHost, imgPort, id, option);
         new RestTemplate().delete(serverUrl);
     }
 }
