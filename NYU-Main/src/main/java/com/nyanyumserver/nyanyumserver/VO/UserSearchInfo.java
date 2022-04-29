@@ -2,14 +2,17 @@ package com.nyanyumserver.nyanyumserver.VO;
 
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@ToString
 public class UserSearchInfo {
     @ApiModelProperty(example = "123")
     private String uid;
