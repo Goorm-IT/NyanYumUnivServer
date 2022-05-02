@@ -1,12 +1,14 @@
 package com.nyanyumserver.nyanyumserver.VO;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
-@Data
+@Getter
+@Setter
+@ToString
 public class PageInfo implements Serializable {
     private int totalCount;
     private int startPageNo;

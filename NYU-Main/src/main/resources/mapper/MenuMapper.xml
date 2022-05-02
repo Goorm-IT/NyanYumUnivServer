@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nyanyumserver.nyanyumserver.mapper.MenuMapper">
+    <resultMap type="com.nyanyumserver.nyanyumserver.VO.MenuInfo" id="MenuInfo">
+        <result column="menuId" property="menuId"/>
+        <result column="menuAlias" property="menuAlias" />
+        <result column="storeId" property="storeId"/>
+        <result column="cost" property="cost" />
+        <result column="choiceCount" property="choiceCount" />
+    </resultMap>
+
+    <select id="getMenuList" resultMap="MenuInfo">
+        SELECT *
+        FROM v2_menu
+        WHERE storeId = #{storeId}
+        ORDER BY menuId ASC;
+    </select>
+
+    <select id="getValid" resultMap="MenuInfo">
+        SELECT storeId
+        FROM v2_menu
+        WHERE menuAlias = #{menuAlias};
+    </select>
+
+    <insert id="setMenu">
+        INSERT INTO v2_menu (menuAlias, storeId, cost)
+        VALUES (#{menuAlias}, #{storeId}, #{cost})
+    </insert>
+
+</mapper>
