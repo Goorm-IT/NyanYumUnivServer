@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Setter
 @ToString
 public class StoreInfo extends MenuInfo implements Serializable {
-    private String storeId;
+    private Integer storeId;
     private String address;
     private float score;
     private String commentId;
