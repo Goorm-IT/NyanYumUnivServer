@@ -1,81 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatiorg//DTD Mapper 3.0//EN" "http://mybatiorg/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nyanyumserver.nyanyumserver.mapper.StoreMapper">
     <resultMap type="com.nyanyumserver.nyanyumserver.VO.StoreInfo" id="StoreInfo">
         <result column="storeId" property="storeId"/>
+        <result column="storeAlias" property="storeAlias"/>
         <result column="address" property="address" />
+        <result column="category" property="category"/>
+        <result column="mapx" property="mapX"/>
+        <result column="mapy" property="mapY"/>
         <result column="score" property="score"/>
-        <result column="commentId" property="commentId" />
+        <result column="scoreCount" property="scoreCount"/>
+        <result column="likeCount" property="likeCount"/>
+        <result column="saveCount" property="saveCount"/>
+        <result column="imagePath" property="imagePath"/>
+        <result column="registerDate" property="updateDate"/>
     </resultMap>
-    <select id="getStoreList" resultMap="StoreInfo">
+    <select id="getStoreList" parameterType="com.nyanyumserver.nyanyumserver.VO.StoreInfo" resultMap="StoreInfo">
         SELECT *
-        FROM v2_store s
-            <where>
-                <if test="category != null">
-                    s.category = #{category}
-                </if>
-            </where>
-            <choose>
-                <when test="option == 'fastest'">
-                    ORDER BY s.genDate DESC;
-                </when>
-                <when test="option == 'oldest'">
-                    ORDER BY s.genDate ASC;
-                </when>
-                <when test="option == 'popular'">
-                    ORDER BY s.like DESC;
-                </when>
-                <when test="option == 'highScore'">
-                    ORDER BY s.score DESC;
-                </when>
-            </choose>
-        LIMIT #{endPageNo} OFFSET #{startPageNo};
+        FROM v2_store
+            <if test="category != null">
+                WHERE category = #{category}
+            </if>
+        LIMIT #{endPageNo} OFFSET #{startPageNo}
+        <choose>
+            <when test = "order == 'fastest'">
+                ORDER BY registerDate DESC;
+            </when>
+            <when test="order == 'oldest'">
+                ORDER BY registerDate ASC;
+            </when>
+            <when test="order == 'popular'">
+                ORDER BY likeCount  DESC;
+            </when>
+            <when test="order == 'highScore'">
+                ORDER BY score DESC;
+            </when>
+        </choose>
     </select>
 
-    <select id="getStoreInfo" resultMap="StoreInfo">
+    <select id="getStoreInfo" parameterType="com.nyanyumserver.nyanyumserver.VO.StoreInfo" resultMap="StoreInfo">
         SELECT *
-        FROM v2_store s
-        JOIN menu m
-        ON s.storeId = #{storeId};
+        FROM v2_store
+        WHERE storeAlias = #{storeAlias};
     </select>
 
     <select id="getSearchStore" resultMap="StoreInfo">
         SELECT *
         FROM v2_store
-        <where>
-            storeId LIKE CONCAT ('%', #{storeId}, '%');
-        </where>
-        <choose>
-            <when test="option == 'fastest'">
-                ORDER BY s.genDate DESC;
-            </when>
-            <when test="option == 'oldest'">
-                ORDER BY s.genDate ASC;
-            </when>
-            <when test="option == 'popular'">
-                ORDER BY s.like DESC;
-            </when>
-            <when test="option == 'highScore'">
-                ORDER BY s.score DESC;
-            </when>
-        </choose>
+        WHERE storeAlias LIKE CONCAT ('%', #{storeAlias}, '%')
+            <choose>
+                <when test="order == 'fastest'">
+                    ORDER BY registerDate DESC;
+                </when>
+                <when test="order == 'oldest'">
+                    ORDER BY registerDate ASC;
+                </when>
+                <when test="order == 'popular'">
+                    ORDER BY likeCount DESC;
+                </when>
+                <when test="order == 'highScore'">
+                    ORDER BY score DESC;
+                </when>
+            </choose>
     </select>
 
     <select id="getMonthlyStore" resultMap="StoreInfo">
         SELECT *
         FROM v2_store
-        ORDER BY monthlyVote DESC
+        ORDER BY likeCount DESC
         LIMIT 5;
     </select>
 
     <select id="getRegister" parameterType="com.nyanyumserver.nyanyumserver.VO.StoreInfo" resultMap="StoreInfo">
-        INSERT INTO v2_store (storeId, address, category, path)
-        VALUES (#{storeId}, #{address}, #{category}, #{path})
+        INSERT INTO v2_store (storeAlias, address, category, imagePath)
+        VALUES (#{storeAlias}, #{address}, #{category}, #{imagePath})
     </select>
 
     <select id="getStoreId" parameterType="String" resultType="String">
-        SELECT v2_store
-        FROM store
+        SELECT *
+        FROM v2_store
         WHERE storeId = #{storeId}
     </select>
 
