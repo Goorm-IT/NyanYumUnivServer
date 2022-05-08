@@ -42,11 +42,11 @@ public class StoreController {
     public Object getStoreList(
             @ApiParam(value = "startPageNo", required = true) @RequestParam(value = "startPageNo", required = true) int startPageNo,
             @ApiParam(value = "endPageNo", required = true) @RequestParam(value = "endPageNo", required = true) int endPageNo,
-            @ApiParam(value = "storeId", required = false) @RequestParam(value = "storeId", required = false) String storeId,
+            @ApiParam(value = "storeAlias", required = false) @RequestParam(value = "storeAlias", required = false) String storeAlias,
             @ApiParam(value = "category", required = false) @RequestParam(value = "category", required = false) String category,
-            @ApiParam(value = "option" , required = false) @RequestParam(value = "option", required = false) String option)
+            @ApiParam(value = "order" , required = false) @RequestParam(value = "order", required = false) String order)
     {
-        // option = 최근 리뷰 등록 된 순, 가게 등록 최신, 가게 등록 오래 된 순, 리뷰 갯수 높은거, 평점
+        // order = 최근 리뷰 등록 된 순, 가게 등록 최신, 가게 등록 오래 된 순, 리뷰 갯수 높은거, 평점
 
         if (logger.isDebugEnabled()){
             logger.debug("START. getStoreList");
@@ -56,10 +56,9 @@ public class StoreController {
 
             storeSearchInfo.setStartPageNo(startPageNo - 1);
             storeSearchInfo.setEndPageNo(endPageNo);
-
-            storeSearchInfo.setStoreId(storeId);
+            storeSearchInfo.setStoreAlias(storeAlias);
             storeSearchInfo.setCategory(category);
-            storeSearchInfo.setOrder(option);
+            storeSearchInfo.setOrder(order);
 
             storeService.getStoreList(storeSearchInfo);
 
@@ -87,7 +86,7 @@ public class StoreController {
     @PostMapping("/store")
     @ApiOperation(value= "가게 추가")
     public Object addStore(
-            @ApiParam(value = "storeId", required= true) @RequestParam(value = "storeId", required =true) String storeId,
+            @ApiParam(value = "storeAlias", required= true) @RequestParam(value = "storeAlias", required =true) String storeAlias,
             @ApiParam(value = "address", required= true) @RequestParam(value = "address", required=true) String address,
             @ApiParam(value = "category", required= true) @RequestParam(value = "category", required=true) String category,
             @ApiParam(value = "file", required= false) @RequestPart(value = "file", required=false) MultipartFile file,
@@ -98,7 +97,7 @@ public class StoreController {
         }
         StoreSearchInfo storeSearchInfo = new StoreSearchInfo();
 
-        storeSearchInfo.setStoreId(storeId);
+        storeSearchInfo.setStoreAlias(storeAlias);
         storeSearchInfo.setAddress(address);
         storeSearchInfo.setCategory(category);
 
@@ -107,8 +106,8 @@ public class StoreController {
         } else {
             try {
                 if(file != null){
-                String imgPath = imageService.updateImage(file, storeId, "store");
-                storeSearchInfo.setPath(imgPath);
+                String imgPath = imageService.updateImage(file, storeAlias, "store");
+                storeSearchInfo.setImagePath(imgPath);
                 }
                 storeService.getRegister(storeSearchInfo);
                 logger.debug("END. addStore");
@@ -122,10 +121,10 @@ public class StoreController {
         }
     }
 
-    @GetMapping("/store/{storeId}")
+    @GetMapping("/store/{storeAlias}")
     @ApiOperation(value = "가게 정보")
     public Object getStoreInfo(
-            @ApiParam(value = "가게 ID", required = true) @PathVariable(value = "storeId", required = true) String storeId
+            @ApiParam(value = "가게 ID", required = true) @PathVariable(value = "storeAlias", required = true) String storeAlias
     ){
         try{
             if (logger.isDebugEnabled()) {
@@ -133,7 +132,7 @@ public class StoreController {
             }
 
             StoreSearchInfo storeSearchInfo = new StoreSearchInfo();
-            storeSearchInfo.setStoreId(storeId);
+            storeSearchInfo.setStoreAlias(storeAlias);
 
             storeService.getStoreInfo(storeSearchInfo);
 
@@ -174,8 +173,8 @@ public class StoreController {
     @GetMapping("/store/search")
     @ApiOperation(value= "가게 검색")
     public Object getSearchStore(
-            @ApiParam(value = "가게ID", required = true) @RequestParam(value = "storeId", required = true) String storeId,
-            @ApiParam(value = "검색옵션", required = true) @RequestParam(value = "option", required = true) String option
+            @ApiParam(value = "가게 명", required = true) @RequestParam(value = "storeAlias", required = true) String storeAlias,
+            @ApiParam(value = "검색옵션", required = true) @RequestParam(value = "order", required = true) String order
     ){
         try {
             if (logger.isDebugEnabled()) {
@@ -183,8 +182,8 @@ public class StoreController {
             }
             StoreSearchInfo storeSearchInfo = new StoreSearchInfo();
 
-            storeSearchInfo.setStoreId(storeId);
-            storeSearchInfo.setOrder(option);
+            storeSearchInfo.setStoreAlias(storeAlias);
+            storeSearchInfo.setOrder(order);
 
             storeService.getSearchStore(storeSearchInfo);
 

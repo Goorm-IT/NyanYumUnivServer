@@ -18,12 +18,12 @@ public class PageInfo implements Serializable {
 
     public PageInfo(){
     }
-    public PageInfo(int totalCount, int startPageNo, int endPageNo, int startIndex, String option){
+    public PageInfo(int totalCount, int startPageNo, int endPageNo, int startIndex, String order){
         this.totalCount = totalCount;
         this.startPageNo = startPageNo;
         this.endPageNo = endPageNo;
         this.startIndex = startIndex;
-        this.order = option;
+        this.order = order;
 
     }
 
