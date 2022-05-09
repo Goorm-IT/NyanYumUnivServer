@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+@EnableAsync
 @RestController
 @EnableSwagger2
 @RequiredArgsConstructor
@@ -53,7 +54,7 @@ public class ReviewController {
             reviewService.getReview(reviewSearchInfo);
 
             if (reviewSearchInfo.getReviewInfos().isEmpty()){
-                throw new Exception();
+                throw new NullPointerException();
             }
 
             logger.debug("END. getReview");
@@ -79,10 +80,10 @@ public class ReviewController {
             reviewService.getReviewList(reviewSearchInfo);
 
             // 리뷰 존재 X
-            if (reviewSearchInfo.getReviewInfos().size() == 0)
+            if (reviewSearchInfo.getReviewInfos().isEmpty())
                 throw new NullPointerException();
 
-            Map<String, Object> map = new HashMap<String, Object>();
+            Map<String, Object> map = new HashMap<>();
             map.put("reviewList", reviewSearchInfo.getReviewInfos());
 
             logger.debug("END. getReviewList");
@@ -112,7 +113,7 @@ public class ReviewController {
             reviewSearchInfo.setUserAlias(userAlias);
             reviewService.getUserReviewList(reviewSearchInfo);
 
-            Map<String, Object> map = new HashMap<String, Object>();
+            Map<String, Object> map = new HashMap<>();
             map.put("userReviewList", reviewSearchInfo.getReviewInfos());
 
             logger.debug("END. getUserReviewList");
@@ -139,10 +140,10 @@ public class ReviewController {
             reviewService.getReviewContent(reviewSearchInfo);
 
             // 리뷰 존재 X
-            if (reviewSearchInfo.getReviewInfos().size() == 0)
+            if (reviewSearchInfo.getReviewInfos().isEmpty())
                 throw new NullPointerException();
 
-            Map<String, Object> map = new HashMap<String, Object>();
+            Map<String, Object> map = new HashMap<>();
             map.put("reviewList", reviewSearchInfo.getReviewInfos());
 
             logger.debug("END. getReviewContent");
@@ -185,14 +186,15 @@ public class ReviewController {
         reviewSearchInfo.setPropose(propose);
 
         try {
-                if(file != null){
-                    String reviewId = Integer.toString(reviewService.getReviewId(reviewSearchInfo));
-                    String imgPath = imageService.updateImage(file, reviewId, "review");
-                    reviewSearchInfo.setImagePath(imgPath);
-                }
-                reviewService.setReview(reviewSearchInfo);
-                logger.debug("END. setReview");
-                return new ResponseEntity<>(CommonResponse.of(CommonConst.OK), HttpStatus.OK);
+            if(file != null){
+                String reviewId = Integer.toString(reviewService.getReviewId(reviewSearchInfo));
+                String imgPath = imageService.updateImage(file, reviewId, "review");
+                reviewSearchInfo.setImagePath(imgPath);
+            }
+            reviewService.setReview(reviewSearchInfo);
+            reviewService.setMenuCount(reviewSearchInfo);
+            logger.debug("END. setReview");
+            return new ResponseEntity<>(CommonResponse.of(CommonConst.OK), HttpStatus.OK);
 
         }catch (NullPointerException e){
             logger.debug("END. setReview");

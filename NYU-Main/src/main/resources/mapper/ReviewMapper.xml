@@ -38,13 +38,17 @@
         FROM review
         WHERE storeId = #{storeId}
         ORDER BY reviewId DESC
-        LIMIT 5;
+            LIMIT 5;
     </select>
 
     <insert id="setReview">
         INSERT INTO review (userAlias, storeId, menuId, score, content, imagePath, propose)
         VALUES (#{userAlias}, #{storeId}, #{menuId}, #{score}, #{content}, #{imagePath}, #{propose})
     </insert>
+
+    <update id="setMenuCount">
+        UPDATE v2_menu SET choiceCount = choiceCount + 1 WHERE menuId = #{menuId}
+    </update>
 
     <select id="getReviewId" resultType="Int">
         SELECT MAX(reviewId)+1

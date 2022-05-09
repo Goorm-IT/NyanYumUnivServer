@@ -60,6 +60,15 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    public void setMenuCount(ReviewSearchInfo reviewSearchInfo){
+        try{
+            reviewMapper.setMenuCount(reviewSearchInfo);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public Integer getReviewId(ReviewSearchInfo reviewSearchInfo){
         return reviewMapper.getReviewId(reviewSearchInfo);
     }

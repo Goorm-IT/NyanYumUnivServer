@@ -15,5 +15,6 @@ public interface ReviewMapper {
     List<ReviewInfo> getReviewList (ReviewSearchInfo reviewSearchInfo) throws SQLException;
     List<ReviewInfo> getReviewContent (ReviewSearchInfo reviewSearchInfo) throws SQLException;
     void setReview(ReviewSearchInfo reviewSearchInfo) throws SQLException;
+    void setMenuCount(ReviewSearchInfo reviewSearchInfo) throws SQLException;
     Integer getReviewId(ReviewSearchInfo reviewSearchInfo);
 }

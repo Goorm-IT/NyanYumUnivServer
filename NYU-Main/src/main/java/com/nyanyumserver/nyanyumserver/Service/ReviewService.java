@@ -8,5 +8,6 @@ public interface ReviewService {
     void getUserReviewList(ReviewSearchInfo reviewSearchInfo);
     void getReviewContent(ReviewSearchInfo reviewSearchInfo);
     void setReview(ReviewSearchInfo reviewSearchInfo);
+    void setMenuCount(ReviewSearchInfo reviewSearchInfo);
     Integer getReviewId(ReviewSearchInfo reviewSearchInfo);
 }
