@@ -73,4 +73,12 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewMapper.getReviewId(reviewSearchInfo);
     }
 
+    @Override
+    public void deleteReview(ReviewSearchInfo reviewSearchInfo){
+        try{
+            reviewMapper.deleteReview(reviewSearchInfo);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

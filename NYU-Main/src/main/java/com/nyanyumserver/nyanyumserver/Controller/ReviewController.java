@@ -206,4 +206,31 @@ public class ReviewController {
         }
 
     }
+
+    @DeleteMapping("")
+    @ApiOperation(value= "리뷰 삭제")
+    public Object deleteReview(
+            @ApiParam(value = "리뷰 ID", required = true)
+            @RequestParam(value = "reviewId", required = true) Integer reviewId
+    ) {
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("START. deleteReview");
+        }
+        ReviewSearchInfo reviewSearchInfo = new ReviewSearchInfo();
+
+        reviewSearchInfo.setReviewId(reviewId);
+
+        try {
+            reviewService.deleteReview(reviewSearchInfo);
+            logger.debug("END. deleteReview");
+            return new ResponseEntity<>(CommonResponse.of(CommonConst.OK), HttpStatus.OK);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.debug("END. deleteReview");
+            return new ResponseEntity<>(CommonResponse.of(CommonConst.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+        }
+
+    }
 }
