@@ -15,36 +15,48 @@
     <select id="getReview" resultMap="ReviewInfo">
         SELECT *
         FROM review
-        WHERE reviewId = #{reviewId}
+        WHERE reviewId = #{reviewId} AND `show` = 1
         ORDER BY reviewId DESC;
     </select>
 
     <select id="getReviewList" resultMap="ReviewInfo">
         SELECT *
         FROM review
-        WHERE storeId = #{storeId}
+        WHERE storeId = #{storeId} AND `show` = 1
         ORDER BY reviewId DESC;
     </select>
 
     <select id="getUserReviewList" resultMap="ReviewInfo">
         SELECT *
         FROM review
-        WHERE userAlias = #{userAlias};
+        WHERE userAlias = #{userAlias} AND `show` = 1
     </select>
 
     <select id="getReviewContent" resultType="Hashmap">
         SELECT reviewId,
                IF(LENGTH(content) >= 20, CONCAT(SUBSTRING(content, 1, 21), " ..."), content) AS content
         FROM review
-        WHERE storeId = #{storeId}
+        WHERE storeId = #{storeId} AND `show` = 1
         ORDER BY reviewId DESC
-        LIMIT 5;
+            LIMIT 5;
     </select>
 
     <insert id="setReview">
         INSERT INTO review (userAlias, storeId, menuId, score, content, imagePath, propose)
         VALUES (#{userAlias}, #{storeId}, #{menuId}, #{score}, #{content}, #{imagePath}, #{propose})
     </insert>
+
+    <update id="setMenuCount">
+        UPDATE v2_menu
+        SET choiceCount = choiceCount + 1
+        WHERE menuId = #{menuId}
+    </update>
+
+    <update id="deleteReview">
+        UPDATE review
+        SET `show` = 0
+        WHERE reviewId = #{reviewId}
+    </update>
 
     <select id="getReviewId" resultType="Int">
         SELECT MAX(reviewId)+1

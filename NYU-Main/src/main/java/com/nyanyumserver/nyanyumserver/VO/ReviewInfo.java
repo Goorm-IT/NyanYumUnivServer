@@ -20,5 +20,6 @@ public class ReviewInfo {
     private String content;
     private String imagePath;
     private String propose;
+    private boolean delete;
     private LocalDate registerDate;
 }
