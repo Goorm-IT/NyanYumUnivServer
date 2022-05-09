@@ -47,7 +47,7 @@
     </insert>
 
     <update id="setMenuCount">
-        UPDATE v2_menu
+        UPDATE menu
         SET choiceCount = choiceCount + 1
         WHERE menuId = #{menuId}
     </update>

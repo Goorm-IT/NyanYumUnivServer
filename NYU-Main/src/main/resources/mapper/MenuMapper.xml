@@ -11,19 +11,19 @@
 
     <select id="getMenuList" resultMap="MenuInfo">
         SELECT *
-        FROM v2_menu
+        FROM menu
         WHERE storeId = #{storeId}
         ORDER BY menuId ASC;
     </select>
 
     <select id="getValid" resultMap="MenuInfo">
         SELECT storeId
-        FROM v2_menu
+        FROM menu
         WHERE menuAlias = #{menuAlias};
     </select>
 
     <insert id="setMenu">
-        INSERT INTO v2_menu (menuAlias, storeId, cost)
+        INSERT INTO menu (menuAlias, storeId, cost)
         VALUES (#{menuAlias}, #{storeId}, #{cost})
     </insert>
 
