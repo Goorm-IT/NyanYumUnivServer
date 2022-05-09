@@ -35,8 +35,8 @@
     <select id="getStoreInfo" resultMap="StoreInfo">
         SELECT *
         FROM store s
-                 JOIN menu m
-                      ON s.storeId = #{storeId};
+        JOIN menu m
+        ON s.storeId = #{storeId};
     </select>
 
     <select id="getSearchStore" resultMap="StoreInfo">
@@ -65,7 +65,7 @@
         SELECT *
         FROM store
         ORDER BY monthlyVote DESC
-            LIMIT 5;
+        LIMIT 5;
     </select>
 
     <select id="getRegister" parameterType="com.nyanyumserver.nyanyumserver.VO.StoreInfo" resultMap="StoreInfo">
