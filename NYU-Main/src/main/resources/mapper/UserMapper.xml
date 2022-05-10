@@ -11,33 +11,33 @@
     </resultMap>
     <select id="getUid" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo" resultType="String">
         SELECT uId
-        FROM v2_user
+        FROM user
         WHERE uId = #{uid}
     </select>
     <select id="getLogin" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo" resultMap="UserInfo">
         SELECT *
-        FROM v2_user
+        FROM user
         where uId = #{uid}
     </select>
 
     <select id="getRegister" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo" resultMap="UserInfo">
-        INSERT INTO v2_user (uId, userAlias, registerDate)
+        INSERT INTO user (uId, userAlias, registerDate)
         VALUES (#{uid}, #{userAlias}, #{registerDate})
     </select>
 
     <select id="getSecession" parameterType="java.lang.String">
-        DELETE FROM v2_user
+        DELETE FROM user
         WHERE uId = #{uid}
     </select>
 
     <update id="getUpdateUserAlias" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo">
-        UPDATE v2_user
+        UPDATE user
         SET userAlias = #{userAlias}
         WHERE uId = #{uid}
     </update>
 
     <update id="getUpdatePath" parameterType="com.nyanyumserver.nyanyumserver.VO.UserSearchInfo">
-        UPDATE v2_user
+        UPDATE user
         SET imagePath = #{imagePath}
         WHERE uId = #{uid}
     </update>
