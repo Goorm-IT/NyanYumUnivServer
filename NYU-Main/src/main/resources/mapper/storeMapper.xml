@@ -17,7 +17,7 @@
     </resultMap>
     <select id="getStoreList" parameterType="com.nyanyumserver.nyanyumserver.VO.StoreInfo" resultMap="StoreInfo">
         SELECT *
-        FROM v2_store
+        FROM store
             <if test="category != null">
                 WHERE category = #{category}
             </if>
@@ -40,13 +40,13 @@
 
     <select id="getStoreInfo" parameterType="com.nyanyumserver.nyanyumserver.VO.StoreInfo" resultMap="StoreInfo">
         SELECT *
-        FROM v2_store
+        FROM store
         WHERE storeAlias = #{storeAlias};
     </select>
 
     <select id="getSearchStore" resultMap="StoreInfo">
         SELECT *
-        FROM v2_store
+        FROM store
         WHERE storeAlias LIKE CONCAT ('%', #{storeAlias}, '%')
             <choose>
                 <when test="order == 'fastest'">
@@ -66,25 +66,25 @@
 
     <select id="getMonthlyStore" resultMap="StoreInfo">
         SELECT *
-        FROM v2_store
+        FROM store
         ORDER BY likeCount DESC
         LIMIT 5;
     </select>
 
     <select id="getRegister" parameterType="com.nyanyumserver.nyanyumserver.VO.StoreInfo" resultMap="StoreInfo">
-        INSERT INTO v2_store (storeAlias, address, category, imagePath)
+        INSERT INTO store (storeAlias, address, category, imagePath)
         VALUES (#{storeAlias}, #{address}, #{category}, #{imagePath})
     </select>
 
     <select id="getStoreId" parameterType="String" resultType="String">
         SELECT *
-        FROM v2_store
+        FROM store
         WHERE storeId = #{storeId}
     </select>
 
     <select id="getAddress" parameterType="String" resultType="String">
         SELECT address
-        FROM v2_store
+        FROM store
         WHERE address = #{address}
     </select>
 
