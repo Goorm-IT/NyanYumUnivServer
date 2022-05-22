@@ -26,7 +26,7 @@ public class ImageServiceImpl implements ImageService {
 
     public String updateImage(MultipartFile file, String id, String option){
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        body.add("file", file.getResource());
+        body.set("file", file.getResource());
         String serverUrl = String.format("http://%s:%s/nyu/img?id=%s&option=%s", imgHost, imgPort, id, option);
         ResponseEntity<String> response = new RestTemplate().postForEntity(serverUrl, requestEntity, String.class);
         String resBody = response.getBody();
