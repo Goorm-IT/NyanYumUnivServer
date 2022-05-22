@@ -49,7 +49,6 @@ public class ImageServiceImpl implements ImageService {
 
     // Comparing id with bucket images
     private String buildObjectKey(String id, String option) {
-        System.out.format("Objects in S3 bucket %s:\n", bucket);
         ListObjectsV2Result result = amazonS3.listObjectsV2(bucket);
         List<S3ObjectSummary> objects = result.getObjectSummaries(); // Objects List
         for (S3ObjectSummary os : objects) {
@@ -90,7 +89,6 @@ public class ImageServiceImpl implements ImageService {
         if (buildObjectKey(id, option) == null) {
             throw new NullPointerException(String.format("Not Found Image in %s (id : %s)", option, id));
         }
-        System.out.println("imageUrl : " + resourcePath);
         return resourcePath;
     }
 
