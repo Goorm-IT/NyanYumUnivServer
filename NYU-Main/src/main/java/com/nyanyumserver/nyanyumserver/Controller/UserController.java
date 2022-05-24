@@ -205,7 +205,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "프로필 사진 변경")
-    @PutMapping("/image")
+    @PostMapping("/image")
 
     public Object updateProfileImage(@ApiParam(value="Image", required = true) @RequestPart MultipartFile file,
                                      @ApiIgnore HttpSession session) throws IOException {
