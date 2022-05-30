@@ -49,7 +49,7 @@
 
     <update id="setLike">
         UPDATE `like`
-        SET `show` = not `show`, updateDate = curdate()
+        SET `show` = not `show`, updateDate = current_timestamp
         WHERE userAlias = #{userAlias}
           AND storeId = #{storeId}
           AND DATE_FORMAT(updateDate, '%y-%m') = DATE_FORMAT(now(), '%y-%m')
