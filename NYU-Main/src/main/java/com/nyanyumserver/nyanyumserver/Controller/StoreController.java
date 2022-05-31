@@ -4,6 +4,8 @@ import com.nyanyumserver.nyanyumserver.Common.CommonConst;
 import com.nyanyumserver.nyanyumserver.Service.ImageService;
 import com.nyanyumserver.nyanyumserver.Service.StoreService;
 import com.nyanyumserver.nyanyumserver.VO.StoreSearchInfo;
+
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -90,6 +92,8 @@ public class StoreController {
             @ApiParam(value = "address", required= true) @RequestParam(value = "address", required=true) String address,
             @ApiParam(value = "category", required= true) @RequestParam(value = "category", required=true) String category,
             @ApiParam(value = "file", required= false) @RequestPart(value = "file", required=false) MultipartFile file,
+            @ApiParam(value = "mapX", required= true) @RequestParam(value = "mapX", required=true) String mapX,
+            @ApiParam(value = "mapY", required= true) @RequestParam(value = "mapY", required=true) String mapY,
             @ApiIgnore HttpSession session, HttpServletResponse response) {
 
         if (logger.isDebugEnabled()) {
@@ -100,6 +104,8 @@ public class StoreController {
         storeSearchInfo.setStoreAlias(storeAlias);
         storeSearchInfo.setAddress(address);
         storeSearchInfo.setCategory(category);
+        storeSearchInfo.setMapX(mapX);
+        storeSearchInfo.setMapY(mapY);
 
         if (storeService.getStoreId(storeSearchInfo) != null || storeService.getAddress(storeSearchInfo) != null) {
             return new ResponseEntity<>(CommonConst.UNPROCESSABLE_ENTITY, HttpStatus.UNPROCESSABLE_ENTITY);
@@ -111,7 +117,7 @@ public class StoreController {
                 }
                 storeService.getRegister(storeSearchInfo);
                 logger.debug("END. addStore");
-                return null;
+                return new ResponseEntity<>("가게 추가를 완료 했습니다.", HttpStatus.OK);
             } catch (Exception e) {
                 if (logger.isDebugEnabled()) {
                     logger.error("ERROR. addStore");
