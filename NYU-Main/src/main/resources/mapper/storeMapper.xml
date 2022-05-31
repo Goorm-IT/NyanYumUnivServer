@@ -72,8 +72,8 @@
     </select>
 
     <select id="getRegister" parameterType="com.nyanyumserver.nyanyumserver.VO.StoreInfo" resultMap="StoreInfo">
-        INSERT INTO store (storeAlias, address, category, imagePath)
-        VALUES (#{storeAlias}, #{address}, #{category}, #{imagePath})
+        INSERT INTO store (storeAlias, address, category, imagePath, mapx, mapy)
+        VALUES (#{storeAlias}, #{address}, #{category}, #{imagePath}, #{mapX}, #{mapY})
     </select>
 
     <select id="getStoreId" parameterType="String" resultType="String">
