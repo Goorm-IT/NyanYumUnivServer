@@ -9,7 +9,6 @@
         <result column="score" property="score" />
         <result column="content" property="content" />
         <result column="imagePath" property="imagePath" />
-        <result column="propose" property="propose" />
         <result column="registerDate" property="registerDate" />
     </resultMap>
     <select id="getReview" resultMap="ReviewInfo">
@@ -41,8 +40,8 @@
     </select>
 
     <insert id="setReview">
-        INSERT INTO review (userAlias, storeId, menuId, score, content, imagePath, propose)
-        VALUES (#{userAlias}, #{storeId}, #{menuId}, #{score}, #{content}, #{imagePath}, #{propose})
+        INSERT INTO review (userAlias, storeId, menuId, score, content, imagePath)
+        VALUES (#{userAlias}, #{storeId}, #{menuId}, #{score}, #{content}, #{imagePath})
     </insert>
 
     <update id="setMenuCount">
