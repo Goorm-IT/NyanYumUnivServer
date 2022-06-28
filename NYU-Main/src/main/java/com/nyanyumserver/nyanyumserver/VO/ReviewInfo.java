@@ -19,7 +19,6 @@ public class ReviewInfo {
     private float score;
     private String content;
     private String imagePath;
-    private String propose;
     private boolean delete;
     private LocalDate registerDate;
 }

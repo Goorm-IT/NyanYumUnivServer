@@ -126,7 +126,7 @@ public class ReviewController {
     }
 
     @GetMapping("/content")
-    @ApiOperation(value = "가게별 리뷰 한줄평 로드")
+    @ApiOperation(value = "가게별 리뷰 한줄평 로드", notes = "- 글자수 제한 X \n- 최대 5개 추출")
     public Object getReviewContent(
             @ApiParam(value = "가게 ID", required = true)
             @RequestParam(value = "storeId", required = true) Integer storeId
@@ -157,13 +157,12 @@ public class ReviewController {
     }
 
     @PostMapping("")
-    @ApiOperation(value= "새 리뷰 추가", notes = "로그인 상태에서만 가능합니다.")
+    @ApiOperation(value= "새 리뷰 추가", notes = "로그인 상태에서만 가능합니다.\n### <parameter file 설명 별첨>\n- file(*required) : 1개 제한/파일 최대 크기 : 2.5MB")
     public Object setReview(
-            @ApiParam(value = "storId", required= true) @RequestParam(value = "storeId") Integer storeId,
+            @ApiParam(value = "storeId", required= true) @RequestParam(value = "storeId") Integer storeId,
             @ApiParam(value = "menuId", required= true) @RequestParam(value = "menuId") Integer menuId,
             @ApiParam(value = "score", required= true) @RequestParam(value = "score") Float score,
             @ApiParam(value = "content", required= true) @RequestParam(value = "content") String content,
-            @ApiParam(value = "propose") @RequestParam(value = "propose", required=false) String propose,
             @ApiParam(value = "file", required= true) @RequestPart(value = "file") MultipartFile file,
             @ApiIgnore HttpSession session, HttpServletResponse response
     ) {
@@ -183,7 +182,6 @@ public class ReviewController {
         reviewSearchInfo.setMenuId(menuId);
         reviewSearchInfo.setScore(score);
         reviewSearchInfo.setContent(content);
-        reviewSearchInfo.setPropose(propose);
 
         try {
             if(file != null){
