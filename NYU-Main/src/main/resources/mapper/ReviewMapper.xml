@@ -9,7 +9,6 @@
         <result column="score" property="score" />
         <result column="content" property="content" />
         <result column="imagePath" property="imagePath" />
-        <result column="propose" property="propose" />
         <result column="registerDate" property="registerDate" />
     </resultMap>
     <select id="getReview" resultMap="ReviewInfo">
@@ -33,8 +32,7 @@
     </select>
 
     <select id="getReviewContent" resultType="Hashmap">
-        SELECT reviewId,
-               IF(LENGTH(content) >= 20, CONCAT(SUBSTRING(content, 1, 21), " ..."), content) AS content
+        SELECT reviewId, content
         FROM review
         WHERE storeId = #{storeId} AND `show` = 1
         ORDER BY reviewId DESC
@@ -42,8 +40,8 @@
     </select>
 
     <insert id="setReview">
-        INSERT INTO review (userAlias, storeId, menuId, score, content, imagePath, propose)
-        VALUES (#{userAlias}, #{storeId}, #{menuId}, #{score}, #{content}, #{imagePath}, #{propose})
+        INSERT INTO review (userAlias, storeId, menuId, score, content, imagePath)
+        VALUES (#{userAlias}, #{storeId}, #{menuId}, #{score}, #{content}, #{imagePath})
     </insert>
 
     <update id="setMenuCount">
