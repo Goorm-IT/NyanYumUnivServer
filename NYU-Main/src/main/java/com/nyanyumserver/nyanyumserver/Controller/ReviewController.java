@@ -229,6 +229,5 @@ public class ReviewController {
             logger.debug("END. deleteReview");
             return new ResponseEntity<>(CommonResponse.of(CommonConst.BAD_REQUEST), HttpStatus.BAD_REQUEST);
         }
-
     }
 }
