@@ -36,7 +36,6 @@ public class UserServiceImpl implements UserService{
             logger.error(e.getMessage(), e);
         }
     }
-
     public void getSecession(String uid){
         try{
             userMapper.getSecession(uid);
