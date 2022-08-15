@@ -6,4 +6,12 @@
         VALUES (#{userAlias}, #{type}, #{category}, #{content}, #{reviewId})
     </insert>
 
+    <select id="getSupportList">
+        SELECT *
+        FROM support
+            <if test="category != null">
+                WHERE category = #{category}
+            </if>
+    </select>
+
 </mapper>

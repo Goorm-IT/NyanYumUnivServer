@@ -22,7 +22,7 @@ import java.util.Set;
 public class SwaggerConfiguration {
     @Bean
     public Docket swaggerApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.OAS_30)
                 .groupName("NYU-MAIN")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.nyanyumserver.nyanyumserver"))   // 현재 RequestMapping으로 할당된 모든 URL 리스트 추출
