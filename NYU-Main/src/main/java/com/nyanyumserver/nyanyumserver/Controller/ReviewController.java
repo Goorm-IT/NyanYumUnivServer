@@ -4,7 +4,9 @@ import com.nyanyumserver.nyanyumserver.Common.CommonConst;
 import com.nyanyumserver.nyanyumserver.Common.CommonResponse;
 import com.nyanyumserver.nyanyumserver.Service.ImageService;
 import com.nyanyumserver.nyanyumserver.Service.ReviewService;
+import com.nyanyumserver.nyanyumserver.Service.StoreService;
 import com.nyanyumserver.nyanyumserver.VO.ReviewSearchInfo;
+import com.nyanyumserver.nyanyumserver.VO.StoreSearchInfo;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,7 @@ public class ReviewController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final ReviewService reviewService;
+    private final StoreService storeService;
     private final ImageService imageService;
 
 
@@ -187,6 +190,15 @@ public class ReviewController {
             if(file != null){
                 String reviewId = Integer.toString(reviewService.getReviewId(reviewSearchInfo));
                 String imgPath = imageService.updateImage(file, reviewId, "review");
+                String storeImg = imageService.loadImage(storeId.toString(), "store");
+                StoreSearchInfo storeSearchInfo = new StoreSearchInfo();
+
+                if(storeImg == null) {
+                    imageService.updateImage(file, storeId.toString(), "store");
+                    storeSearchInfo.setStoreId(storeId);
+                    storeSearchInfo.setImagePath(imgPath);
+                    storeService.setStorePath(storeSearchInfo);
+                }
                 reviewSearchInfo.setImagePath(imgPath);
             }
             reviewService.setReview(reviewSearchInfo);
@@ -229,6 +241,5 @@ public class ReviewController {
             logger.debug("END. deleteReview");
             return new ResponseEntity<>(CommonResponse.of(CommonConst.BAD_REQUEST), HttpStatus.BAD_REQUEST);
         }
-
     }
 }

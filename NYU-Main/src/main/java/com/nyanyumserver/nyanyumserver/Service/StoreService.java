@@ -11,4 +11,5 @@ public interface StoreService {
     void getRegister(StoreSearchInfo storeSearchInfo);
     String getStoreId(StoreSearchInfo storeSearchInfo);
     String getAddress(StoreSearchInfo storeSearchInfo);
+    void setStorePath(StoreSearchInfo storeSearchInfo);
 }

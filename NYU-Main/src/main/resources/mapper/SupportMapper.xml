@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nyanyumserver.nyanyumserver.mapper.SupportMapper">
+    <insert id="getSupport">
+        INSERT INTO support (userAlias, type, category,content, reviewId)
+        VALUES (#{userAlias}, #{type}, #{category}, #{content}, #{reviewId})
+    </insert>
+
+    <select id="getSupportList">
+        SELECT *
+        FROM support
+            <if test="category != null">
+                WHERE category = #{category}
+            </if>
+    </select>
+
+</mapper>
