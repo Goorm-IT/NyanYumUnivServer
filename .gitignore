@@ -50,7 +50,7 @@ application.properties
 NYU_Manage/*.log
 NYU_Manage/*.pot
 NYU_Manage/*.pyc
-NYU_Manage/__pycache__/
+NYU_Manage/*/__pycache__/*
 NYU_Manage/local_settings.py
 NYU_Manage/db.sqlite3
 NYU_Manage/db.sqlite3-journal
