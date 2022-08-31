@@ -187,6 +187,10 @@ public class ReviewController {
             if(file != null){
                 String reviewId = Integer.toString(reviewService.getReviewId(reviewSearchInfo));
                 String imgPath = imageService.updateImage(file, reviewId, "review");
+                String storeImg = imageService.loadImage(storeId.toString(), "store");
+
+                if(storeImg == null)
+                    imageService.updateImage(file, storeId.toString(), "store");
                 reviewSearchInfo.setImagePath(imgPath);
             }
             reviewService.setReview(reviewSearchInfo);

@@ -34,6 +34,12 @@ public class ImageServiceImpl implements ImageService {
         return tag[3];
     }
 
+    public String loadImage(String id, String option){
+        String serverUrl = String.format("http://%s:%s/nyu/img?id=%s&option=%s", imgHost, imgPort, id, option);
+        String response = new RestTemplate().getForObject(serverUrl, String.class);
+        return response;
+    }
+
     public void deleteImage(String id, String option){
         String serverUrl = String.format("http://%s:%s/nyu/img?id=%s&option=%s", imgHost, imgPort, id, option);
         new RestTemplate().delete(serverUrl);
