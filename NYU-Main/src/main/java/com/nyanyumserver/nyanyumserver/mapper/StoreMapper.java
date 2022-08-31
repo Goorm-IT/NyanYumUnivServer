@@ -1,10 +1,7 @@
 package com.nyanyumserver.nyanyumserver.mapper;
 
 
-import com.nyanyumserver.nyanyumserver.VO.StoreInfo;
-import com.nyanyumserver.nyanyumserver.VO.StoreSearchInfo;
-import com.nyanyumserver.nyanyumserver.VO.UserInfo;
-import com.nyanyumserver.nyanyumserver.VO.UserSearchInfo;
+import com.nyanyumserver.nyanyumserver.VO.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.sql.SQLException;
@@ -21,4 +18,5 @@ public interface StoreMapper {
     List<StoreInfo> getRegister(StoreSearchInfo storeSearchInfo) throws SQLException;
     String getStoreId(StoreSearchInfo storeSearchInfo);
     String getAddress(StoreSearchInfo storeSearchInfo);
+    void setStorePath(StoreSearchInfo storeSearchInfo);
 }

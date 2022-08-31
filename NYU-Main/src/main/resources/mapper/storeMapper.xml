@@ -88,4 +88,10 @@
         WHERE address = #{address}
     </select>
 
+    <update id="setStorePath">
+        UPDATE store
+        SET imagePath = #{imagePath}
+        WHERE storeId = #{storeId}
+    </update>
+
 </mapper>

@@ -1,12 +1,9 @@
 package com.nyanyumserver.nyanyumserver.Service.impl;
 
 import com.nyanyumserver.nyanyumserver.Service.StoreService;
-import com.nyanyumserver.nyanyumserver.VO.StoreInfo;
 import com.nyanyumserver.nyanyumserver.VO.StoreSearchInfo;
-import com.nyanyumserver.nyanyumserver.VO.UserSearchInfo;
 import com.nyanyumserver.nyanyumserver.mapper.StoreMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -71,4 +68,8 @@ public class StoreServiceImpl implements StoreService {
         return storeMapper.getAddress(storeSearchInfo);
     }
 
+    @Override
+    public void setStorePath(StoreSearchInfo storeSearchInfo){
+        storeMapper.setStorePath(storeSearchInfo);
+    }
 }
