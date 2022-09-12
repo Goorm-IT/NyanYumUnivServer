@@ -19,7 +19,7 @@
     <select id="getValid" resultMap="MenuInfo">
         SELECT storeId
         FROM menu
-        WHERE menuAlias = #{menuAlias};
+        WHERE menuAlias = #{menuAlias} AND storeId = #{storeId};
     </select>
 
     <insert id="setMenu">
