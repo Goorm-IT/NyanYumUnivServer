@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nyanyumserver.nyanyumserver.mapper.SaveMapper">
+    <resultMap type="com.nyanyumserver.nyanyumserver.VO.SaveInfo" id="SaveInfo">
+        <result column="saveId" property="saveId"/>
+        <result column="userAlias" property="userAlias" />
+        <result column="storeId" property="storeId"/>
+        <result column="show" property="show"/>
+        <result column="updateDate" property="updateDate" />
+    </resultMap>
+
+    <resultMap type="com.nyanyumserver.nyanyumserver.VO.StoreInfo" id="StoreInfo">
+        <result column="storeId" property="storeId"/>
+        <result column="storeAlias" property="storeAlias"/>
+        <result column="address" property="address" />
+        <result column="category" property="category"/>
+        <result column="mapx" property="mapX"/>
+        <result column="mapy" property="mapY"/>
+        <result column="score" property="score"/>
+        <result column="scoreCount" property="scoreCount"/>
+        <result column="likeCount" property="likeCount"/>
+        <result column="saveCount" property="saveCount"/>
+        <result column="imagePath" property="imagePath"/>
+        <result column="updateDate" property="updateDate"/>
+    </resultMap>
+
+    <select id="getSave" resultType="int">
+       SELECT IFNULL(`show`, -1), count(`show`) AS showCount
+       FROM `save`
+       WHERE userAlias = #{userAlias}
+         AND storeId = #{storeId};
+    </select>
+
+    <select id="getUserSaveList" resultMap="StoreInfo">
+        SELECT *
+        FROM store AS s
+        INNER JOIN
+            (
+            SELECT *
+            FROM `save`
+            WHERE userAlias = #{userAlias}
+              AND `show` = 1
+              AND DATE_FORMAT(updateDate, '%y-%m') = DATE_FORMAT(now(), '%y-%m')
+            ) AS l
+        ON s.storeId = l.storeId
+        ORDER BY l.updateDate DESC
+        </select>
+
+    <update id="setSave">
+        UPDATE `save`
+        SET `show` = not `show`, updateDate = CURRENT_TIMESTAMP
+        WHERE userAlias = #{userAlias}
+          AND storeId = #{storeId}
+    </update>
+
+    <insert id="createSave">
+        INSERT INTO `save` (userAlias, storeId)
+        VALUES (#{userAlias}, #{storeId})
+    </insert>
+
+    <update id="setSaveCount">
+        UPDATE store
+        SET saveCount = IF(#{show} = 0, saveCount + 1, saveCount - 1),
+            updateDate = CURDATE()
+        WHERE storeId = #{storeId};
+    </update>
+
+</mapper>

@@ -1,6 +1,7 @@
 package com.nyanyumserver.nyanyumserver.Controller;
 
 import com.nyanyumserver.nyanyumserver.Service.UserService;
+import com.nyanyumserver.nyanyumserver.Service.ImageService;
 import com.nyanyumserver.nyanyumserver.VO.UserInfo;
 import com.nyanyumserver.nyanyumserver.VO.UserSearchInfo;
 import io.swagger.annotations.ApiOperation;
@@ -8,53 +9,56 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.filechooser.FileSystemView;
-import java.io.*;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/nyu/user")
 @RequiredArgsConstructor
-
+@EnableSwagger2
 public class UserController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    UserService userService;
-
+    private final UserService userService;
+    private final ImageService imageService;
 
     public String getSessionUid(HttpSession session){
-        return (String) session.getAttribute("uid");
+        return (String) session.getAttribute("uId");
     }
 
     public void setUserSession(HttpSession session, List<UserInfo> getUserInfos){
-        session.setAttribute("uid", getUserInfos.get(0).getUid());
-        session.setAttribute("nickName", getUserInfos.get(0).getNickName());
+        session.setAttribute("uId", getUserInfos.get(0).getUid());
+        session.setAttribute("userAlias", getUserInfos.get(0).getUserAlias());
         session.setAttribute("userLevel", getUserInfos.get(0).getUserLevel());
-        session.setAttribute("postId", getUserInfos.get(0).getPostId());
-        session.setAttribute("path", getUserInfos.get(0).getPath());
+        session.setAttribute("registerDate", getUserInfos.get(0).getRegisterDate());
+        session.setAttribute("imagePath", getUserInfos.get(0).getImagePath());
     }
 
-    public void setUpdateNickName(HttpSession session, String nickName){
-        session.removeAttribute("nickName");
-        session.setAttribute("nickName", nickName);
+    public void setUpdateUserAlias(HttpSession session, String userAlias){
+        session.removeAttribute("userAlias");
+        session.setAttribute("userAlias", userAlias);
     }
 
 
-    @GetMapping("/login")
+    public void setUpdatePath(HttpSession session, String path){
+        session.removeAttribute("imagePath");
+        session.setAttribute("imagePath", path);
+    }
+
+
+    @GetMapping("/session")
     @ApiOperation(value = "로그인")
     public Object login(
             @ApiParam(value = "uid (UserId)", required= true) @RequestParam(value = "uid", required =true) String uid ,
@@ -68,13 +72,13 @@ public class UserController {
             UserSearchInfo userSearchInfo = new UserSearchInfo();
 
             userSearchInfo.setUid(uid);
+            logger.debug(userSearchInfo.getUid());
             userService.getLogin(userSearchInfo);
-
+            logger.debug(userSearchInfo.getUserLevel());
             if (userSearchInfo.getUserInfos().get(0) == null){
                 throw new Exception();
             }
             else{
-                userSearchInfo.getPath();
                 setUserSession(session, userSearchInfo.getUserInfos());
 
                 logger.debug("END. Login");
@@ -87,16 +91,35 @@ public class UserController {
         }
 
     }
+
+    @ApiOperation(value = "로그아웃")
+    @DeleteMapping("/session")
+    public ResponseEntity<?> logOut(@ApiIgnore HttpSession session){
+
+        if (logger.isDebugEnabled()){
+            logger.debug("START. logout");
+        }
+
+        session.invalidate();
+        return new ResponseEntity<>("로그아웃", HttpStatus.OK);
+    }
+
     @ApiOperation(value = "회원가입")
-    @PutMapping("/register")
+    @PostMapping("")
     public Object Register(
-            @ApiParam(value = "uid (UserId)", required= true) @RequestParam(value = "uid", required =true) String uid,
-            @ApiParam(value = "nickName (nickName)", required= true) @RequestParam("nickName") String nickName,
+            @ApiParam(value = "uid", required= true) @RequestParam(value = "uid", required =true) String uid,
+            @ApiParam(value = "userAlias", required= true) @RequestParam("userAlias") String userAlias,
             @ApiIgnore HttpSession session, HttpServletResponse response) {
+
+
+        if (logger.isDebugEnabled()){
+            logger.debug("START. register");
+        }
+
         UserSearchInfo userSearchInfo = new UserSearchInfo();
 
         userSearchInfo.setUid(uid);
-        userSearchInfo.setNickName(nickName);
+        userSearchInfo.setUserAlias(userAlias);
         userSearchInfo.setRegisterDate(LocalDate.now());
 
         if (userService.getUid(userSearchInfo) != null) {
@@ -113,33 +136,33 @@ public class UserController {
 
     }
 
-    @ApiOperation(value = "로그아웃")
-    @GetMapping("/logout")
-    public ResponseEntity<?> logOut(@ApiIgnore HttpSession session){
-        session.invalidate();
-        return new ResponseEntity<>("로그아웃", HttpStatus.OK);
-    }
-
     @ApiOperation(value = "회원탈퇴")
-    @DeleteMapping("/secession")
+    @DeleteMapping("")
     public Object secession(@ApiIgnore HttpSession session){
 
-        userService.getSecession((String) session.getAttribute("uid"));
+        userService.getSecession((String) session.getAttribute("uId"));
         session.invalidate();
         return new ResponseEntity<>("탈퇴 처리 되었습니다.", HttpStatus.OK);
     }
 
 
     @ApiOperation(value = "유저정보")
-    @GetMapping(value = "/info")
+    @GetMapping( "")
     public Object info(@ApiIgnore HttpSession session){
+
+        if (logger.isDebugEnabled()){
+            logger.debug("START. info");
+        }
+
         UserSearchInfo userSearchInfo = new UserSearchInfo();
+
+
         UserInfo userInfo = new UserInfo();
-        userInfo.setUid((String) session.getAttribute("uid"));
-        userInfo.setNickName((String) session.getAttribute("nickName"));
+        userInfo.setUid((String) session.getAttribute("uId"));
+        userInfo.setUserAlias((String) session.getAttribute("userAlias"));
         userInfo.setUserLevel((String) session.getAttribute("userLevel"));
-        userInfo.setPostId((String) session.getAttribute("postId"));
-        userInfo.setPath((String) session.getAttribute("path"));
+        userInfo.setRegisterDate((LocalDate) session.getAttribute("registerDate"));
+        userInfo.setImagePath((String) session.getAttribute("imagePath"));
 
         List<UserInfo> userInfos = new ArrayList<>();
 
@@ -150,19 +173,24 @@ public class UserController {
     }
 
     @ApiOperation(value = "닉네임변경")
-    @PostMapping("/updateNickName")
-    public Object updateNickName(@ApiParam(value = "nickName (nickName)", required= true) @RequestParam("nickName") String nickName,
+    @PutMapping("/alias")
+    public Object updateUserAlias(@ApiParam(value = "userAlias", required= true) @RequestParam("userAlias") String userAlias,
                                  @ApiIgnore HttpSession session){
+
+        if (logger.isDebugEnabled()){
+            logger.debug("START. updateUserAlias");
+        }
+
         UserSearchInfo userSearchInfo = new UserSearchInfo();
 
 
         try{
-            userSearchInfo.setUid((String) session.getAttribute("uid"));
-            userSearchInfo.setNickName(nickName);
+            userSearchInfo.setUid((String) session.getAttribute("uId"));
+            userSearchInfo.setUserAlias(userAlias);
 
-            if(userService.getUpdateNickName(userSearchInfo)){
+            if(userService.getUpdateUserAlias(userSearchInfo)){
                 userService.getLogin(userSearchInfo);
-                setUpdateNickName(session, userSearchInfo.getNickName());
+                setUpdateUserAlias(session, userSearchInfo.getUserAlias());
             }else{
                 throw new SQLException();
             }
@@ -176,35 +204,66 @@ public class UserController {
 
     }
 
-    @ApiOperation(value = "프로필 사진 등록")
-    @PutMapping("/updateProfileImage")
+    @ApiOperation(value = "프로필 사진 변경")
+    @PostMapping("/image")
+
     public Object updateProfileImage(@ApiParam(value="Image", required = true) @RequestPart MultipartFile file,
                                      @ApiIgnore HttpSession session) throws IOException {
 
-        final String mainPath = "/Users/hantaemin/ProfileImage/";
-
-        // mac
-        // final String mainPath = "//Users/hantaemin/ProfileImage/"
+        if (logger.isDebugEnabled()){
+            logger.debug("START. updateProfileImage");
+        }
 
         UserSearchInfo userSearchInfo = new UserSearchInfo();
 
         try{
-         userSearchInfo.setUid((String) session.getAttribute("uid"));
+            Object uid = session.getAttribute("uId");
+            userSearchInfo.setUid((String) uid);
+            String imgPath = imageService.updateImage(file, (String) uid, "profile");
+            userSearchInfo.setImagePath(imgPath);
 
-            // where MainPath
-            // System.out.println(FileSystemView.getFileSystemView().getHomeDirectory().toString());
-
-            System.out.println(FileSystemView.getFileSystemView().getHomeDirectory().toString());
-            //"/Users/hantaemin/ProfileImage/" +
-            file.transferTo(new File( "/home/ubuntu/Profile/" + session.getAttribute("uid") + ".jpg"));
-
-            userSearchInfo.setPath((String) session.getAttribute(mainPath + session.getAttribute("uid") + ".jpg"));
+            if(userService.getUpdatePath(userSearchInfo)){
+                setUpdatePath(session, userSearchInfo.getImagePath());
+            }else{
+                throw new SQLException();
+            }
 
             return new ResponseEntity<>("변경 완료", HttpStatus.OK);
 
-        } catch (IOException e){
+        } catch (Exception e){
+
             return new ResponseEntity<>("변경 실패", HttpStatus.BAD_REQUEST);
         }
     }
 
+    @ApiOperation(value = "프로필 사진 삭제")
+    @DeleteMapping("/image")
+
+    public Object deleteProfileImage(@ApiIgnore HttpSession session) throws IOException {
+
+        if (logger.isDebugEnabled()){
+            logger.debug("START. deleteProfileImage");
+        }
+
+        UserSearchInfo userSearchInfo = new UserSearchInfo();
+
+        try{
+            Object uid = session.getAttribute("uId");
+            userSearchInfo.setUid((String) uid);
+            imageService.deleteImage((String) uid, "profile");
+            userSearchInfo.setImagePath(null);
+
+            if(userService.getUpdatePath(userSearchInfo)){
+                setUpdatePath(session, userSearchInfo.getImagePath());
+            }else{
+                throw new SQLException();
+            }
+
+            return new ResponseEntity<>("삭제 완료", HttpStatus.OK);
+
+        } catch (Exception e){
+
+            return new ResponseEntity<>("삭제 실패", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

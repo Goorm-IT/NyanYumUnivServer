@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nyanyumserver.nyanyumserver.mapper.LikeMapper">
+    <resultMap type="com.nyanyumserver.nyanyumserver.VO.LikeInfo" id="LikeInfo">
+        <result column="likeId" property="likeId"/>
+        <result column="userAlias" property="userAlias" />
+        <result column="storeId" property="storeId"/>
+        <result column="show" property="show"/>
+        <result column="updateDate" property="updateDate" />
+    </resultMap>
+
+    <resultMap type="com.nyanyumserver.nyanyumserver.VO.StoreInfo" id="StoreInfo">
+        <result column="storeId" property="storeId"/>
+        <result column="storeAlias" property="storeAlias"/>
+        <result column="address" property="address" />
+        <result column="category" property="category"/>
+        <result column="mapx" property="mapX"/>
+        <result column="mapy" property="mapY"/>
+        <result column="score" property="score"/>
+        <result column="scoreCount" property="scoreCount"/>
+        <result column="likeCount" property="likeCount"/>
+        <result column="saveCount" property="saveCount"/>
+        <result column="imagePath" property="imagePath"/>
+        <result column="updateDate" property="updateDate"/>
+    </resultMap>
+
+    <select id="getLike" resultType="int">
+       SELECT IFNULL(`show`, -1), count(`show`) AS showCount
+       FROM `like`
+       WHERE userAlias = #{userAlias}
+         AND storeId = #{storeId}
+         AND DATE_FORMAT(updateDate, '%y-%m') = DATE_FORMAT(now(), '%y-%m');
+    </select>
+
+    <select id="getUserLikeList" resultMap="StoreInfo">
+        SELECT *
+        FROM store AS s
+        INNER JOIN
+            (
+            SELECT *
+            FROM `like`
+            WHERE userAlias = #{userAlias}
+              AND `show` = 1
+              AND DATE_FORMAT(updateDate, '%y-%m') = DATE_FORMAT(now(), '%y-%m')
+            ) AS l
+        ON s.storeId = l.storeId
+        ORDER BY l.updateDate DESC
+        </select>
+
+    <update id="setLike">
+        UPDATE `like`
+        SET `show` = not `show`, updateDate = current_timestamp
+        WHERE userAlias = #{userAlias}
+          AND storeId = #{storeId}
+          AND DATE_FORMAT(updateDate, '%y-%m') = DATE_FORMAT(now(), '%y-%m')
+    </update>
+
+    <insert id="createLike">
+        INSERT INTO `like` (userAlias, storeId)
+        VALUES (#{userAlias}, #{storeId})
+    </insert>
+
+    <update id="setLikeCount">
+        UPDATE store
+        SET likeCount = IF(#{show} = 0, likeCount + 1, likeCount - 1),
+            updateDate = CURDATE()
+        WHERE storeId = #{storeId};
+    </update>
+
+</mapper>

@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: NYU-Eureka
+  cloud:
+    compatibility-verifier:
+      enabled: false
+
+server:
+  port: 80
+
+eureka:
+  instance:
+    hostname: localhost
+  server:
+    enable-self-preservation: true
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://localhost:80/eureka

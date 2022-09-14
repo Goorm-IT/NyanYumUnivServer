@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nyanyumserver.nyanyumserver.mapper.ReviewMapper">
+    <resultMap type="com.nyanyumserver.nyanyumserver.VO.ReviewInfo" id="ReviewInfo">
+        <result column="reviewId" property="reviewId"/>
+        <result column="userAlias" property="userAlias" />
+        <result column="storeId" property="storeId"/>
+        <result column="menuId" property="menuId" />
+        <result column="score" property="score" />
+        <result column="content" property="content" />
+        <result column="imagePath" property="imagePath" />
+        <result column="registerDate" property="registerDate" />
+    </resultMap>
+    <select id="getReview" resultMap="ReviewInfo">
+        SELECT *
+        FROM review
+        WHERE reviewId = #{reviewId} AND `show` = 1
+        ORDER BY reviewId DESC;
+    </select>
+
+    <select id="getReviewList" resultMap="ReviewInfo">
+        SELECT *
+        FROM review
+        WHERE storeId = #{storeId} AND `show` = 1
+        ORDER BY reviewId DESC;
+    </select>
+
+    <select id="getUserReviewList" resultMap="ReviewInfo">
+        SELECT *
+        FROM review
+        WHERE userAlias = #{userAlias} AND `show` = 1
+    </select>
+
+    <select id="getReviewContent" resultType="Hashmap">
+        SELECT reviewId, content
+        FROM review
+        WHERE storeId = #{storeId} AND `show` = 1
+        ORDER BY reviewId DESC
+            LIMIT 5;
+    </select>
+
+    <insert id="setReview">
+        INSERT INTO review (userAlias, storeId, menuId, score, content, imagePath)
+        VALUES (#{userAlias}, #{storeId}, #{menuId}, #{score}, #{content}, #{imagePath})
+    </insert>
+
+    <update id="setMenuCount">
+        UPDATE menu
+        SET choiceCount = choiceCount + 1
+        WHERE menuId = #{menuId}
+    </update>
+
+    <update id="deleteReview">
+        UPDATE review
+        SET `show` = 0
+        WHERE reviewId = #{reviewId}
+    </update>
+
+    <select id="getReviewId" resultType="Int">
+        SELECT MAX(reviewId)+1
+        FROM review
+    </select>
+
+</mapper>

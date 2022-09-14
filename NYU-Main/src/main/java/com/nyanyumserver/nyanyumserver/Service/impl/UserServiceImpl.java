@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.sql.SQLException;
 
 
@@ -17,6 +18,7 @@ public class UserServiceImpl implements UserService{
     UserMapper userMapper;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
+
 
     public void getLogin(UserSearchInfo userSearchInfo){
         try{
@@ -34,7 +36,6 @@ public class UserServiceImpl implements UserService{
             logger.error(e.getMessage(), e);
         }
     }
-
     public void getSecession(String uid){
         try{
             userMapper.getSecession(uid);
@@ -43,8 +44,13 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    public boolean getUpdateNickName(UserSearchInfo userSearchInfo){
-        return userMapper.getUpdateNickName(userSearchInfo);
+    public boolean getUpdateUserAlias(UserSearchInfo userSearchInfo){
+        return userMapper.getUpdateUserAlias(userSearchInfo);
+    }
+
+
+    public boolean getUpdatePath(UserSearchInfo userSearchInfo){
+        return userMapper.getUpdatePath(userSearchInfo);
     }
 
     public String getUid(UserSearchInfo userSearchInfo){
